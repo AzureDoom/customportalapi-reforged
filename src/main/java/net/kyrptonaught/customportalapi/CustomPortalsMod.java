@@ -98,6 +98,6 @@ public class CustomPortalsMod {
 	@SubscribeEvent
 	public static void onCommonStartUp(FMLCommonSetupEvent event) {
 		NetworkManager.register();
-		CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new ResourceLocation("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
+//		CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new ResourceLocation("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
 	}
 }
