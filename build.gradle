@@ -58,6 +58,7 @@ repositories {
 
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${neo_version}"
+	annotationProcessor "org.spongepowered:mixin:0.8.4:processor"
 }
 
 tasks.withType(ProcessResources).configureEach {
