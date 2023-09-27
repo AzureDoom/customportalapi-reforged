@@ -34,7 +34,7 @@ public abstract class ServerPlayerMixin extends PlayerMixin implements EntityInC
 		return serverWorld.dimension();
 	}
 
-	@Inject(method = "createEndPlatform\r\n" + "", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "createEndPlatform", at = @At("HEAD"), cancellable = true)
 	public void CPAcancelEndPlatformSpawn(ServerLevel world, BlockPos centerPos, CallbackInfo ci) {
 		if (this.didTeleport())
 			ci.cancel();

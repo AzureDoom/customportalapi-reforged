@@ -78,44 +78,6 @@ public abstract class ClientPlayerMixin extends Player implements EntityInCustom
 		}
 	}
 
-//	@Unique
-//	private void updateCustomNausea(int previousColor) {
-//		if (this.getTimeInPortal() > 0) {
-//			if (this.minecraft.screen != null && !this.minecraft.screen.isPauseScreen()) {
-//				if (this.minecraft.screen instanceof AbstractContainerScreen) {
-//					this.closeContainer();
-//				}
-//				this.minecraft.setScreen(null);
-//			}
-//
-//			if (this.oSpinningEffectIntensity == 0.0F && previousColor != -999) { // previous color prevents this from playing after a teleport. A tp sets the previousColor to -999
-//				PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalHelper.getPortalBase(level(), getInPortalPos()));
-//				if (link != null && link.getInPortalAmbienceEvent().hasEvent()) {
-//					this.minecraft.getSoundManager().play(link.getInPortalAmbienceEvent().execute(this).getInstance());
-//				} else
-//					this.minecraft.getSoundManager().play(SimpleSoundInstance.forLocalAmbience(SoundEvents.PORTAL_TRIGGER, this.random.nextFloat() * 0.4F + 0.8F, 0.25F));
-//			}
-//
-//			this.oSpinningEffectIntensity += 0.0125F;
-//			if (this.oSpinningEffectIntensity >= 1.0F) {
-//				this.oSpinningEffectIntensity = 1.0F;
-//			}
-//		} else if (this.hasEffect(MobEffects.CONFUSION) && this.getEffect(MobEffects.CONFUSION).getDuration() > 60) {
-//			this.oSpinningEffectIntensity += 0.006666667F;
-//			if (this.oSpinningEffectIntensity > 1.0F) {
-//				this.oSpinningEffectIntensity = 1.0F;
-//			}
-//		} else {
-//			if (this.oSpinningEffectIntensity > 0.0F) {
-//				this.oSpinningEffectIntensity -= 0.05F;
-//			}
-//
-//			if (this.oSpinningEffectIntensity < 0.0F) {
-//				this.oSpinningEffectIntensity = 0.0F;
-//			}
-//		}
-//	}
-
 	@Unique
 	private void updateCustomNausea(int previousColor) {
 		this.oSpinningEffectIntensity = this.spinningEffectIntensity;
