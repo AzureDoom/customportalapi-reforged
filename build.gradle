@@ -157,7 +157,7 @@ if (file('key.properties').exists()) {
         def mainFile = upload("902717", jar)
         mainFile.releaseType = "release"
         mainFile.changelogType = "text"
-        mainFile.changelog = file(").txt")
+        mainFile.changelog = file("changelog.txt")
         mainFile.addModLoader("NeoForge")
         mainFile.addJavaVersion("Java 17")
         mainFile.addGameVersion("1.20.2")
