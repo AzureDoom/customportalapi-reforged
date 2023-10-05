@@ -160,7 +160,7 @@ if (file('key.properties').exists()) {
         mainFile.changelog = file("changelog.txt")
         mainFile.addModLoader("NeoForge")
         mainFile.addJavaVersion("Java 17")
-        mainFile.addGameVersion("1.20.2")
+        mainFile.addGameVersion("1.20.1")
     }
 }
 
