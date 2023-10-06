@@ -5,7 +5,7 @@ plugins {
     id 'net.neoforged.gradle' version '[6.0.18,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
     id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.darkhax.curseforgegradle' version '1.+'
 }
 
 import groovy.json.JsonOutput
@@ -46,7 +46,7 @@ minecraft {
     }
 }
 
-mixin { 
+mixin {
     add sourceSets.main, "cpapireforged.refmap.json"
     config "cpapireforged.mixins.json"
 }
@@ -107,7 +107,7 @@ publishing {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' 
+    options.encoding = 'UTF-8'
 }
 
 publishing {
@@ -136,7 +136,7 @@ processResources {
         def jsonMinifyStart = System.currentTimeMillis()
         def jsonMinified = 0
         def jsonBytesSaved = 0
-        fileTree(dir: outputs.files.asPath, include: '**/*.json').each { 
+        fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
             File file = it
             jsonMinified++
             def oldLength = file.length()
@@ -148,21 +148,19 @@ processResources {
 }
 
 if (file('key.properties').exists()) {
-    curseforge {
+    task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
         def curseProp = new Properties()
         File secretPropsFile = file("key.properties")
         curseProp.load(secretPropsFile.newInputStream())
+        apiToken = curseProp.getProperty("curseKey")
 
-        project {
-            apiKey = curseProp.getProperty('curseKey')
-            id = "902717"
-            releaseType = "release"
-            changelogType = 'text'
-            changelog = file('changelog.txt')
-        	addGameVersion("1.20.1")
-            addGameVersion("NeoForge")
-            addGameVersion("Java 17")
-        }
+        def mainFile = upload("902717", jar)
+        mainFile.releaseType = "release"
+        mainFile.changelogType = "text"
+        mainFile.changelog = file("changelog.txt")
+        mainFile.addModLoader("NeoForge")
+        mainFile.addJavaVersion("Java 17")
+        mainFile.addGameVersion("1.20.1")
     }
 }
 
@@ -172,9 +170,9 @@ if (file('key.properties').exists()) {
 		File secretPropsFile = file("key.properties")
 		modrinthProp.load(secretPropsFile.newInputStream())
 		token = modrinthProp.getProperty('modrinthKey')
-		projectId = 'VepYPOdy' 
-		versionNumber = project.mod_version 
-		uploadFile = jar 
+		projectId = 'VepYPOdy'
+		versionNumber = project.mod_version
+		uploadFile = jar
 		changelog = rootProject.file("changelog.txt").text
 		gameVersions = ['1.20.1']
 		loaders = ['neoforge']
