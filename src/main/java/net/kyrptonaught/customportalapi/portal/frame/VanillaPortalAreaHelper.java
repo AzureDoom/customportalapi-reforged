@@ -1,10 +1,6 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import com.google.common.collect.Sets;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
@@ -23,13 +19,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Optional;
+import java.util.function.Predicate;
+
 public class VanillaPortalAreaHelper extends PortalFrameTester {
+    protected final int maxWidth = 21;
+    protected final int maxHeight = 21;
     protected Direction.Axis axis;
     protected int height;
     protected int width;
-
-    protected final int maxWidth = 21;
-    protected final int maxHeight = 21;
 
     public VanillaPortalAreaHelper() {
 
@@ -60,7 +58,7 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-	public BlockUtil.FoundRectangle getRectangle() {
+    public BlockUtil.FoundRectangle getRectangle() {
         return new BlockUtil.FoundRectangle(lowerCorner, width, height);
     }
 

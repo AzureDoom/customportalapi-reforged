@@ -1,8 +1,5 @@
 package net.kyrptonaught.customportalapi.api;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
@@ -18,7 +15,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class CustomPortalBuilder {
     private final PortalLink portalLink;
@@ -152,7 +152,7 @@ public class CustomPortalBuilder {
     /**
      * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
      */
-    public CustomPortalBuilder customPortalBlock(RegistryObject<CustomPortalBlock> portalBlock) {
+    public CustomPortalBuilder customPortalBlock(Supplier<CustomPortalBlock> portalBlock) {
         portalLink.setPortalBlock(portalBlock);
         return this;
     }
@@ -193,6 +193,7 @@ public class CustomPortalBuilder {
         portalLink.portalFrameTester = frameTester;
         return this;
     }
+
     /**
      * Register an event to be called immediately before the specified entity is teleported.
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP

@@ -1,11 +1,5 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.client.Minecraft;
@@ -15,6 +9,11 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LevelRenderer.class)
 public class WorldRendererMixin {
@@ -30,7 +29,7 @@ public class WorldRendererMixin {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
             if (link != null && link.getPostTpPortalAmbienceEvent().hasEvent())
                 instance.play(link.getPostTpPortalAmbienceEvent().execute(minecraft.player).getInstance());
-        } else 
+        } else
             instance.play(sound);
     }
 }

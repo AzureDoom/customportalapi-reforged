@@ -1,16 +1,15 @@
 package net.kyrptonaught.customportalapi.networking;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import net.kyrptonaught.customportalapi.client.ClientHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
+
+import java.util.Optional;
 
 public record ForcePlacePortalPacket(BlockPos pos) {
 
@@ -26,12 +25,12 @@ public record ForcePlacePortalPacket(BlockPos pos) {
         buf.writeBlockPos(packet.pos);
     }
 
-    public static void handle(ForcePlacePortalPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(ForcePlacePortalPacket packet, NetworkEvent.Context contextSupplier) {
         ClientHandler.forcePortal(packet);
-        contextSupplier.get().setPacketHandled(true);
+        contextSupplier.setPacketHandled(true);
     }
 
     public static void register(SimpleChannel channel, Integer id) {
-        channel.registerMessage(id, ForcePlacePortalPacket.class, ForcePlacePortalPacket::encode, ForcePlacePortalPacket::decode, ForcePlacePortalPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        channel.registerMessage(id, ForcePlacePortalPacket.class, ForcePlacePortalPacket::encode, ForcePlacePortalPacket::decode, ForcePlacePortalPacket::handle, Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT));
     }
 }

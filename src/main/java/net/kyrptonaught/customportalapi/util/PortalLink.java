@@ -1,7 +1,5 @@
 package net.kyrptonaught.customportalapi.util;
 
-import java.util.function.Consumer;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
@@ -10,23 +8,24 @@ import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class PortalLink {
+    private final CPAEvent<Entity, SHOULDTP> beforeTPEvent = new CPAEvent<>(SHOULDTP.CONTINUE_TP);
+    private final CPAEvent<Player, CPASoundEventData> inPortalAmbienceEvent = new CPAEvent<>();
+    private final CPAEvent<Player, CPASoundEventData> postTpPortalAmbienceEvent = new CPAEvent<>();
     public ResourceLocation block;
     public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.FIRE;
-    private RegistryObject<CustomPortalBlock> portalBlock = CustomPortalsMod.portalBlock;
     public ResourceLocation dimID;
     public ResourceLocation returnDimID = new ResourceLocation("overworld");
     public boolean onlyIgnitableInReturnDim = false;
     public int colorID;
     public int forcedWidth, forcedHeight;
     public ResourceLocation portalFrameTester = CustomPortalsMod.VANILLAPORTAL_FRAMETESTER;
-
+    private Supplier<CustomPortalBlock> portalBlock = CustomPortalsMod.portalBlock;
     private Consumer<Entity> postTPEvent;
-    private final CPAEvent<Entity, SHOULDTP> beforeTPEvent = new CPAEvent<>(SHOULDTP.CONTINUE_TP);
-    private final CPAEvent<Player, CPASoundEventData> inPortalAmbienceEvent = new CPAEvent<>();
-    private final CPAEvent<Player, CPASoundEventData> postTpPortalAmbienceEvent = new CPAEvent<>();
 
     public PortalLink() {
 
@@ -42,7 +41,7 @@ public class PortalLink {
         return portalBlock.get();
     }
 
-    public void setPortalBlock(RegistryObject<CustomPortalBlock> block) {
+    public void setPortalBlock(Supplier<CustomPortalBlock> block) {
         this.portalBlock = block;
     }
 

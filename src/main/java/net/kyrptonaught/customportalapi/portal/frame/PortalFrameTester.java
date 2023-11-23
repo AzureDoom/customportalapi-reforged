@@ -1,9 +1,5 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
@@ -23,11 +19,38 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 public abstract class PortalFrameTester {
+    public BlockPos lowerCorner;
     protected HashSet<Block> VALID_FRAME = null;
     protected int foundPortalBlocks;
-    public BlockPos lowerCorner;
     protected LevelAccessor world;
+
+    public static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
+        PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
+        for (Block block : foundations) {
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+            if (link != null) {
+                ignitionSource = link.portalIgnitionSource;
+                break;
+            }
+        }
+        if (blockState.isAir() || CustomPortalHelper.isInstanceOfCustomPortal(blockState))
+            return true;
+        if (ignitionSource == PortalIgnitionSource.FIRE)
+            return blockState.is(BlockTags.FIRE);
+        if (ignitionSource.isWater())
+            return blockState.getFluidState().is(FluidTags.WATER);
+        if (ignitionSource.isLava())
+            return blockState.getFluidState().is(FluidTags.LAVA);
+        if (ignitionSource.sourceType == PortalIgnitionSource.SourceType.FLUID) {
+            return BuiltInRegistries.FLUID.getKey(blockState.getFluidState().getType()) == ignitionSource.ignitionSourceID;
+        }
+        return false;
+    }
 
     public abstract PortalFrameTester init(LevelAccessor world, BlockPos blockPos, Axis axis, Block... foundations);
 
@@ -111,29 +134,6 @@ public abstract class PortalFrameTester {
             for (int j = 0; j < size2; j++)
                 if (CustomPortalHelper.isInstanceOfCustomPortal(world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j))))
                     foundPortalBlocks++;
-    }
-
-    public static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
-        PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
-        for (Block block : foundations) {
-            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
-            if (link != null) {
-                ignitionSource = link.portalIgnitionSource;
-                break;
-            }
-        }
-        if (blockState.isAir() || CustomPortalHelper.isInstanceOfCustomPortal(blockState))
-            return true;
-        if (ignitionSource == PortalIgnitionSource.FIRE)
-            return blockState.is(BlockTags.FIRE);
-        if (ignitionSource.isWater())
-            return blockState.getFluidState().is(FluidTags.WATER);
-        if (ignitionSource.isLava())
-            return blockState.getFluidState().is(FluidTags.LAVA);
-        if (ignitionSource.sourceType == PortalIgnitionSource.SourceType.FLUID) {
-            return BuiltInRegistries.FLUID.getKey(blockState.getFluidState().getType()) == ignitionSource.ignitionSourceID;
-        }
-        return false;
     }
 
     @FunctionalInterface

@@ -1,9 +1,5 @@
 package net.kyrptonaught.customportalapi;
 
-import java.util.Random;
-
-import javax.swing.text.html.BlockView;
-
 import net.kyrptonaught.customportalapi.init.ParticleInit;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
@@ -27,6 +23,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.swing.text.html.BlockView;
+import java.util.Random;
 
 public class CustomPortalBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -70,7 +69,7 @@ public class CustomPortalBlock extends Block {
     }
 
     public void randomDisplayTick(BlockState state, Level world, BlockPos pos, Random random) {
-        if (random.nextInt(100) == 0) 
+        if (random.nextInt(100) == 0)
             world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
 
         for (var i = 0; i < 4; ++i) {
@@ -100,8 +99,7 @@ public class CustomPortalBlock extends Block {
         if (!entityInPortal.didTeleport()) {
             if (entityInPortal.getTimeInPortal() >= entity.getPortalWaitTime()) {
                 entityInPortal.setDidTP(true);
-                if (!world.isClientSide())
-                    CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+                if (!world.isClientSide()) CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
             }
         }
     }
