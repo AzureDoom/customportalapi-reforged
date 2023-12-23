@@ -39,7 +39,7 @@ public class CustomPortalsMod {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, MOD_ID);
 
-    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register("custom_portal_block", () -> new CustomPortalBlock(Block.Properties.copy(Blocks.NETHER_PORTAL).noCollission().strength(-1).sound(SoundType.GLASS).lightLevel(state -> 11)));
+    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register("custom_portal_block", () -> new CustomPortalBlock(Block.Properties.ofFullCopy(Blocks.NETHER_PORTAL).noCollission().strength(-1).sound(SoundType.GLASS).lightLevel(state -> 11)));
     public static HashMap<ResourceLocation, ResourceKey<Level>> dims = new HashMap<>();
     public static ResourceLocation VANILLAPORTAL_FRAMETESTER = new ResourceLocation(MOD_ID, "vanillanether");
     public static ResourceLocation FLATPORTAL_FRAMETESTER = new ResourceLocation(MOD_ID, "flat");
@@ -69,8 +69,8 @@ public class CustomPortalsMod {
                 var hit = player.pick(6, 1, false);
                 if (hit.getType() == HitResult.Type.BLOCK) {
                     var blockHit = (BlockHitResult) hit;
-                    if (PortalPlacer.attemptPortalLight(world, blockHit.getBlockPos().relative(blockHit.getDirection()), PortalIgnitionSource.ItemUseSource(item)))
-                        event.setResult(Event.Result.ALLOW);
+                    if (!PortalPlacer.attemptPortalLight(world, blockHit.getBlockPos().relative(blockHit.getDirection()), PortalIgnitionSource.ItemUseSource(item)))
+                        event.setCanceled(true);
                 }
             }
         }
