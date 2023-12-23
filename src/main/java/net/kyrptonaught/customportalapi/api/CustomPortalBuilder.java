@@ -77,7 +77,7 @@ public class CustomPortalBuilder {
     /**
      * Specify the color to be used to tint the portal block.
      *
-     * @param color Single Color int value used for tinting. See {@link net.minecraft.util.DyeColor}
+     * @param color Single Color int value used for tinting. See {@link net.minecraft.util.ColorRGBA}
      */
     public CustomPortalBuilder tintColor(int color) {
         portalLink.colorID = color;
