@@ -17,8 +17,6 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-;
-
 @OnlyIn(Dist.CLIENT)
 @Mixin(Gui.class)
 public class InGameHudMixin {
