@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Optional;
