@@ -3,8 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.78'
-    id "com.modrinth.minotaur" version "2.+"
-    id 'net.darkhax.curseforgegradle' version '1.+'
+    id 'me.modmuss50.mod-publish-plugin' version '0.4.0'
 }
 
 import groovy.json.JsonOutput
@@ -109,33 +108,25 @@ processResources {
 }
 
 if (file('key.properties').exists()) {
-    task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-        def curseProp = new Properties()
+    publishMods {
+        def releaseProp = new Properties()
         File secretPropsFile = file("key.properties")
-        curseProp.load(secretPropsFile.newInputStream())
-        apiToken = curseProp.getProperty("curseKey")
-
-        def mainFile = upload("902717", jar)
-        mainFile.releaseType = "release"
-        mainFile.changelogType = "text"
-        mainFile.changelog = file("changelog.txt")
-        mainFile.addModLoader("NeoForge")
-        mainFile.addJavaVersion("Java 17")
-        mainFile.addGameVersion("1.20.4")
-    }
-}
-
-if (file('key.properties').exists()) {
-    modrinth {
-        def modrinthProp = new Properties()
-        File secretPropsFile = file("key.properties")
-        modrinthProp.load(secretPropsFile.newInputStream())
-        token = modrinthProp.getProperty('modrinthKey')
-        projectId = 'VepYPOdy'
-        versionNumber = project.mod_version
-        uploadFile = jar
+        releaseProp.load(secretPropsFile.newInputStream())
+        file = jar.archiveFile
         changelog = rootProject.file("changelog.txt").text
-        gameVersions = ['1.20.4']
-        loaders = ['neoforge']
+        type = STABLE
+        modLoaders.add("neoforge")
+
+        curseforge {
+            projectId = "902717"
+            projectSlug = "custom-portal-api-reforged"
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("1.20.4")
+        }
+        modrinth {
+            projectId = "VepYPOdy"
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("1.20.4")
+        }
     }
 }
