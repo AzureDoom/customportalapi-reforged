@@ -34,11 +34,13 @@ public class CustomPortalsModClient {
 
     @SubscribeEvent
     public static void onParticleFactoryRegistry(final RegisterParticleProvidersEvent event) {
-        Minecraft.getInstance().particleEngine.register(ParticleInit.CUSTOMPORTALPARTICLE.get(), CustomPortalParticle.Factory::new);
+        Minecraft.getInstance().particleEngine.register(ParticleInit.CUSTOMPORTALPARTICLE.get(),
+                CustomPortalParticle.Factory::new);
     }
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(CustomPortalsMod.portalBlock.get(), RenderType.translucent()));
+        event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(CustomPortalsMod.portalBlock.get(),
+                RenderType.translucent()));
     }
 }

@@ -10,7 +10,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.IEventBus;
@@ -34,7 +36,10 @@ public class CustomPortalsMod {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, MOD_ID);
 
-    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register("custom_portal_block", () -> new CustomPortalBlock(Block.Properties.ofFullCopy(Blocks.NETHER_PORTAL).noCollission().strength(-1).sound(SoundType.GLASS).lightLevel(state -> 11)));
+    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register("custom_portal_block",
+            () -> new CustomPortalBlock(
+                    Block.Properties.ofFullCopy(Blocks.NETHER_PORTAL).noCollission().strength(-1).sound(
+                            SoundType.GLASS).lightLevel(state -> 11)));
     public static HashMap<ResourceLocation, ResourceKey<Level>> dims = new HashMap<>();
     public static ResourceLocation VANILLAPORTAL_FRAMETESTER = new ResourceLocation(MOD_ID, "vanillanether");
     public static ResourceLocation FLATPORTAL_FRAMETESTER = new ResourceLocation(MOD_ID, "flat");
@@ -46,10 +51,24 @@ public class CustomPortalsMod {
         onInitialize(bus);
     }
 
+    public static void logError(String message) {
+        System.out.println("[" + MOD_ID + "]ERROR: " + message);
+    }
+
+    public static CustomPortalBlock getDefaultPortalBlock() {
+        return portalBlock.get();
+    }
+
+    @SubscribeEvent
+    public static void onCommonStartUp(FMLCommonSetupEvent event) {
+        // CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new ResourceLocation("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
+    }
+
     private void onServerStart(ServerStartedEvent event) {
         for (ResourceKey<Level> registryKey : event.getServer().levelKeys())
             dims.put(registryKey.location(), registryKey);
-        portalLinkingStorage = (PortalLinkingStorage) event.getServer().overworld().getDataStorage().computeIfAbsent(PortalLinkingStorage.factory(), MOD_ID);
+        portalLinkingStorage = event.getServer().overworld().getDataStorage().computeIfAbsent(
+                PortalLinkingStorage.factory(), MOD_ID);
     }
 
     private void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
@@ -64,7 +83,9 @@ public class CustomPortalsMod {
                 var hit = player.pick(6, 1, false);
                 if (hit.getType() == HitResult.Type.BLOCK) {
                     var blockHit = (BlockHitResult) hit;
-                    if (!PortalPlacer.attemptPortalLight(world, blockHit.getBlockPos().relative(blockHit.getDirection()), PortalIgnitionSource.ItemUseSource(item)))
+                    if (!PortalPlacer.attemptPortalLight(world,
+                            blockHit.getBlockPos().relative(blockHit.getDirection()),
+                            PortalIgnitionSource.ItemUseSource(item)))
                         event.setCanceled(true);
                 }
             }
@@ -76,18 +97,5 @@ public class CustomPortalsMod {
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         NeoForge.EVENT_BUS.addListener(this::onRightClickItem);
-    }
-
-    public static void logError(String message) {
-        System.out.println("[" + MOD_ID + "]ERROR: " + message);
-    }
-
-    public static CustomPortalBlock getDefaultPortalBlock() {
-        return portalBlock.get();
-    }
-
-    @SubscribeEvent
-    public static void onCommonStartUp(FMLCommonSetupEvent event) {
-        // CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new ResourceLocation("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
     }
 }

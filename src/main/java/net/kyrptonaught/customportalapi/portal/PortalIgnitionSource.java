@@ -15,7 +15,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class PortalIgnitionSource {
-    public final static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED, BuiltInRegistries.BLOCK.getKey(Blocks.FIRE));
+    public final static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED,
+            BuiltInRegistries.BLOCK.getKey(Blocks.FIRE));
     public final static PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
     private static final HashSet<Item> USEITEMS = new HashSet<>();
     public SourceType sourceType;
@@ -50,11 +51,13 @@ public class PortalIgnitionSource {
     }
 
     public boolean isWater() {
-        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(a -> a.is(FluidTags.WATER)).isPresent();
+        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(
+                a -> a.is(FluidTags.WATER)).isPresent();
     }
 
     public boolean isLava() {
-        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(a -> a.is(FluidTags.LAVA)).isPresent();
+        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(
+                a -> a.is(FluidTags.LAVA)).isPresent();
     }
 
     public enum SourceType {

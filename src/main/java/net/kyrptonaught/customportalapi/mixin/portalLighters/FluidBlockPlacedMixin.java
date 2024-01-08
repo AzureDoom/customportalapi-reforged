@@ -18,6 +18,7 @@ public abstract class FluidBlockPlacedMixin {
     @Inject(method = "onPlace", at = @At("HEAD"))
     public void fluidPlacedAttemptPortalLight(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         if (state.getFluidState().isSource())
-            PortalPlacer.attemptPortalLight(world, pos, PortalIgnitionSource.FluidSource(state.getFluidState().getType()));
+            PortalPlacer.attemptPortalLight(world, pos,
+                    PortalIgnitionSource.FluidSource(state.getFluidState().getType()));
     }
 }

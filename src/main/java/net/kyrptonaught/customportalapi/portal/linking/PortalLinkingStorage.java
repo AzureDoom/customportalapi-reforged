@@ -20,7 +20,8 @@ public class PortalLinkingStorage extends SavedData {
     }
 
     public static SavedData.Factory<PortalLinkingStorage> factory() {
-        return new SavedData.Factory<PortalLinkingStorage>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt, DataFixTypes.SAVED_DATA_MAP_DATA);
+        return new SavedData.Factory<PortalLinkingStorage>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt,
+                DataFixTypes.SAVED_DATA_MAP_DATA);
     }
 
     public static PortalLinkingStorage fromNbt(CompoundTag tag) {
@@ -30,7 +31,8 @@ public class PortalLinkingStorage extends SavedData {
         for (int i = 0; i < links.size(); i++) {
             CompoundTag link = links.getCompound(i);
             DimensionalBlockPos toTag = DimensionalBlockPos.fromTag(link.getCompound("to"));
-            cman.addLink(BlockPos.of(link.getLong("fromPos")), new ResourceLocation(link.getString("fromDimID")), toTag.pos, toTag.dimensionType);
+            cman.addLink(BlockPos.of(link.getLong("fromPos")), new ResourceLocation(link.getString("fromDimID")),
+                    toTag.pos, toTag.dimensionType);
         }
         return cman;
     }

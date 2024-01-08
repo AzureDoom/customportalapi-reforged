@@ -2,7 +2,9 @@ package net.kyrptonaught.customportalapi.mixin.client;
 
 import net.kyrptonaught.customportalapi.interfaces.ClientPlayerInColoredPortal;
 import net.minecraft.client.ClientRecipeBook;
-import net.minecraft.client.multiplayer.*;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.stats.StatsCounter;
 import org.spongepowered.asm.mixin.Mixin;

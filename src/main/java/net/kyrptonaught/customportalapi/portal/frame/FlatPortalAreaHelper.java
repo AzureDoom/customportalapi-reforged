@@ -59,7 +59,9 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     public Optional<PortalFrameTester> getOrEmpty(LevelAccessor worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {
-        return Optional.of((PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
+        return Optional.of(
+                (PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(
+                predicate);
     }
 
     public boolean isAlreadyLitPortalFrame() {
@@ -72,8 +74,12 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     public void lightPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
-        BlockState blockState = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(), Direction.Axis.Y);
-        BlockPos.betweenClosed(this.lowerCorner, this.lowerCorner.relative(Direction.Axis.X, this.xSize - 1).relative(Direction.Axis.Z, this.zSize - 1)).forEach((blockPos) -> {
+        BlockState blockState = CustomPortalHelper.blockWithAxis(
+                link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
+                Direction.Axis.Y);
+        BlockPos.betweenClosed(this.lowerCorner,
+                this.lowerCorner.relative(Direction.Axis.X, this.xSize - 1).relative(Direction.Axis.Z,
+                        this.zSize - 1)).forEach((blockPos) -> {
             this.world.setBlock(blockPos, blockState, 18);
         });
     }
@@ -136,9 +142,13 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     @Override
     public BlockPos doesPortalFitAt(Level world, BlockPos attemptPos, Direction.Axis axis) {
-        BlockUtil.FoundRectangle rect = BlockUtil.getLargestRectangleAround(attemptPos.above(), Direction.Axis.X, 4, Direction.Axis.Z, 4, blockPos -> {
-            return world.getBlockState(blockPos).isSolid() && !world.getBlockState(blockPos.above()).isSolid() && !world.getBlockState(blockPos.above()).liquid() && !world.getBlockState(blockPos.above(2)).isSolid() && !world.getBlockState(blockPos.above(2)).liquid();
-        });
+        BlockUtil.FoundRectangle rect = BlockUtil.getLargestRectangleAround(attemptPos.above(), Direction.Axis.X, 4,
+                Direction.Axis.Z, 4, blockPos -> {
+                    return world.getBlockState(blockPos).isSolid() && !world.getBlockState(
+                            blockPos.above()).isSolid() && !world.getBlockState(
+                            blockPos.above()).liquid() && !world.getBlockState(
+                            blockPos.above(2)).isSolid() && !world.getBlockState(blockPos.above(2)).liquid();
+                });
         return rect.axis1Size >= 4 && rect.axis2Size >= 4 ? rect.minCorner : null;
     }
 

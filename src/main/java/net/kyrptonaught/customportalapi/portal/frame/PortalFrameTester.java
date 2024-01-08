@@ -47,7 +47,8 @@ public abstract class PortalFrameTester {
         if (ignitionSource.isLava())
             return blockState.getFluidState().is(FluidTags.LAVA);
         if (ignitionSource.sourceType == PortalIgnitionSource.SourceType.FLUID) {
-            return BuiltInRegistries.FLUID.getKey(blockState.getFluidState().getType()) == ignitionSource.ignitionSourceID;
+            return BuiltInRegistries.FLUID.getKey(
+                    blockState.getFluidState().getType()) == ignitionSource.ignitionSourceID;
         }
         return false;
     }
@@ -93,7 +94,8 @@ public abstract class PortalFrameTester {
             offset++;
             if (offset > 20) return null;
             if ((axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getMinBuildHeight()) ||
-                    (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder().isWithinBounds(blockPos.relative(axis, -offset))))
+                    (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder().isWithinBounds(
+                            blockPos.relative(axis, -offset))))
                 return null;
         }
         return blockPos.relative(axis, -(offset - 1));
@@ -116,13 +118,17 @@ public abstract class PortalFrameTester {
     protected boolean checkForValidFrame(Direction.Axis axis1, Direction.Axis axis2, int size1, int size2) {
         BlockPos checkPos = lowerCorner.mutable();
         for (int i = 0; i < size1; i++) {
-            if (!VALID_FRAME.contains(world.getBlockState(checkPos.relative(axis2, -1)).getBlock()) || !VALID_FRAME.contains(world.getBlockState(checkPos.relative(axis2, size2)).getBlock()))
+            if (!VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis2, -1)).getBlock()) || !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis2, size2)).getBlock()))
                 return false;
             checkPos = checkPos.relative(axis1, 1);
         }
         checkPos = lowerCorner.mutable();
         for (int i = 0; i < size2; i++) {
-            if (!VALID_FRAME.contains(world.getBlockState(checkPos.relative(axis1, -1)).getBlock()) || !VALID_FRAME.contains(world.getBlockState(checkPos.relative(axis1, size1)).getBlock()))
+            if (!VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis1, -1)).getBlock()) || !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis1, size1)).getBlock()))
                 return false;
             checkPos = checkPos.relative(axis2, 1);
         }
@@ -132,7 +138,8 @@ public abstract class PortalFrameTester {
     protected void countExistingPortalBlocks(Direction.Axis axis1, Direction.Axis axis2, int size1, int size2) {
         for (int i = 0; i < size1; i++)
             for (int j = 0; j < size2; j++)
-                if (CustomPortalHelper.isInstanceOfCustomPortal(world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j))))
+                if (CustomPortalHelper.isInstanceOfCustomPortal(
+                        world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j))))
                     foundPortalBlocks++;
     }
 

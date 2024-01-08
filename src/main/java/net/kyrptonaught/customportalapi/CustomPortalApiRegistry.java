@@ -48,7 +48,8 @@ public class CustomPortalApiRegistry {
             CustomPortalsMod.logError("Built in CustomPortalBlock is null");
 
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
-            CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
+            CustomPortalsMod.logError(
+                    "A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);
         }

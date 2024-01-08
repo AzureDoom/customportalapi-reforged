@@ -79,12 +79,14 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     }
 
     public Optional<PortalFrameTester> getOrEmpty(LevelAccessor worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {
-        Optional<PortalFrameTester> optional = Optional.of(new VanillaPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
+        Optional<PortalFrameTester> optional = Optional.of(
+                new VanillaPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
         if (optional.isPresent()) {
             return optional;
         } else {
             Direction.Axis axis2 = axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
-            return Optional.of(new VanillaPortalAreaHelper().init(worldAccess, blockPos, axis2, foundations)).filter(predicate);
+            return Optional.of(new VanillaPortalAreaHelper().init(worldAccess, blockPos, axis2, foundations)).filter(
+                    predicate);
         }
     }
 
@@ -103,9 +105,12 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
 
     @Override
     public BlockPos doesPortalFitAt(Level world, BlockPos attemptPos, Direction.Axis axis) {
-        if (isEmptySpace(world.getBlockState(attemptPos)) && isEmptySpace(world.getBlockState(attemptPos.relative(axis, 1))) &&
-                isEmptySpace(world.getBlockState(attemptPos.above())) && isEmptySpace(world.getBlockState(attemptPos.relative(axis, 1).above())) &&
-                isEmptySpace(world.getBlockState(attemptPos.above(2))) && isEmptySpace(world.getBlockState(attemptPos.relative(axis, 1).above(2))) &&
+        if (isEmptySpace(world.getBlockState(attemptPos)) && isEmptySpace(
+                world.getBlockState(attemptPos.relative(axis, 1))) &&
+                isEmptySpace(world.getBlockState(attemptPos.above())) && isEmptySpace(
+                world.getBlockState(attemptPos.relative(axis, 1).above())) &&
+                isEmptySpace(world.getBlockState(attemptPos.above(2))) && isEmptySpace(
+                world.getBlockState(attemptPos.relative(axis, 1).above(2))) &&
                 canHoldPortal(world, attemptPos.below()) && canHoldPortal(world, attemptPos.relative(axis, 1).below()))
             return attemptPos;
 
@@ -153,10 +158,14 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
 
     public void lightPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
-        BlockState blockState = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(), axis);
-        BlockPos.betweenClosed(this.lowerCorner, this.lowerCorner.relative(Direction.UP, this.height - 1).relative(this.axis, this.width - 1)).forEach((blockPos) -> {
-            this.world.setBlock(blockPos, blockState, 18);
-        });
+        BlockState blockState = CustomPortalHelper.blockWithAxis(
+                link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
+                axis);
+        BlockPos.betweenClosed(this.lowerCorner,
+                this.lowerCorner.relative(Direction.UP, this.height - 1).relative(this.axis, this.width - 1)).forEach(
+                (blockPos) -> {
+                    this.world.setBlock(blockPos, blockState, 18);
+                });
     }
 
     public void createPortal(Level world, BlockPos pos, BlockState frameBlock, Direction.Axis axis) {

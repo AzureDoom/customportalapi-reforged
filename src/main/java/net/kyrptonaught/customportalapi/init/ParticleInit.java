@@ -10,14 +10,17 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class ParticleInit {
-    public static DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE, CustomPortalsMod.MOD_ID);
+    public static DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(Registries.PARTICLE_TYPE,
+            CustomPortalsMod.MOD_ID);
 
-    public static final Supplier<ParticleType<BlockParticleOption>> CUSTOMPORTALPARTICLE = PARTICLES.register("customportalparticle", () -> new ParticleType<BlockParticleOption>(false, BlockParticleOption.DESERIALIZER) {
-        private Codec<BlockParticleOption> codec = BlockParticleOption.codec(this);
+    public static final Supplier<ParticleType<BlockParticleOption>> CUSTOMPORTALPARTICLE = PARTICLES.register(
+            "customportalparticle",
+            () -> new ParticleType<BlockParticleOption>(false, BlockParticleOption.DESERIALIZER) {
+                private final Codec<BlockParticleOption> codec = BlockParticleOption.codec(this);
 
-        @Override
-        public Codec<BlockParticleOption> codec() {
-            return codec;
-        }
-    });
+                @Override
+                public Codec<BlockParticleOption> codec() {
+                    return codec;
+                }
+            });
 }

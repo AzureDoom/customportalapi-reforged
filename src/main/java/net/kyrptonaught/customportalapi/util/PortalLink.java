@@ -1,6 +1,8 @@
 package net.kyrptonaught.customportalapi.util;
 
-import net.kyrptonaught.customportalapi.*;
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +46,8 @@ public class PortalLink {
     }
 
     public boolean doesIgnitionMatch(PortalIgnitionSource attemptedSource) {
-        return portalIgnitionSource.sourceType == attemptedSource.sourceType && portalIgnitionSource.ignitionSourceID.equals(attemptedSource.ignitionSourceID);
+        return portalIgnitionSource.sourceType == attemptedSource.sourceType && portalIgnitionSource.ignitionSourceID.equals(
+                attemptedSource.ignitionSourceID);
     }
 
     public boolean canLightInDim(ResourceLocation dim) {

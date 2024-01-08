@@ -17,20 +17,23 @@ import java.util.Optional;
 
 public class PortalPlacer {
     public static boolean attemptPortalLight(Level world, BlockPos portalPos, PortalIgnitionSource ignitionSource) {
-        return attemptPortalLight(world, portalPos, CustomPortalHelper.getClosestFrameBlock(world, portalPos), ignitionSource);
+        return attemptPortalLight(world, portalPos, CustomPortalHelper.getClosestFrameBlock(world, portalPos),
+                ignitionSource);
     }
 
     public static boolean attemptPortalLight(Level world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
         Block foundationBlock = world.getBlockState(framePos).getBlock();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(foundationBlock);
 
-        if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.dimension().location()))
+        if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(
+                world.dimension().location()))
             return false;
         return createPortal(link, world, portalPos, foundationBlock);
     }
 
     private static boolean createPortal(PortalLink link, Level world, BlockPos pos, Block foundationBlock) {
-        Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(world, pos, Direction.Axis.X, foundationBlock);
+        Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(
+                world, pos, Direction.Axis.X, foundationBlock);
         // is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
             if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight))

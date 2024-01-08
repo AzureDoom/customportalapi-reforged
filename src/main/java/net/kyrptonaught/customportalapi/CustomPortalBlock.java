@@ -12,7 +12,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,7 +52,8 @@ public class CustomPortalBlock extends Block {
         var block = getPortalBase((Level) world, pos);
         var link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
-            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalHelper.getAxisFrom(state), block);
+            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world,
+                    pos, CustomPortalHelper.getAxisFrom(state), block);
             if (portalFrameTester.isAlreadyLitPortalFrame())
                 return super.updateShape(state, direction, newState, world, pos, posFrom);
         }
@@ -68,7 +71,8 @@ public class CustomPortalBlock extends Block {
 
     public void randomDisplayTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (random.nextInt(100) == 0)
-            world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
+            world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
+                    SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
 
         for (var i = 0; i < 4; ++i) {
             var d = (double) pos.getX() + random.nextDouble();
@@ -85,7 +89,8 @@ public class CustomPortalBlock extends Block {
                 f = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
                 j = random.nextFloat() * 2.0F * (float) k;
             }
-            world.addParticle(new BlockParticleOption(ParticleInit.CUSTOMPORTALPARTICLE.get(), getPortalBase(world, pos).defaultBlockState()), d, e, f, g, h, j);
+            world.addParticle(new BlockParticleOption(ParticleInit.CUSTOMPORTALPARTICLE.get(),
+                    getPortalBase(world, pos).defaultBlockState()), d, e, f, g, h, j);
         }
     }
 
