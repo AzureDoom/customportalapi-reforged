@@ -121,12 +121,12 @@ if (file('key.properties').exists()) {
             projectId = "902717"
             projectSlug = "custom-portal-api-reforged"
             accessToken = releaseProp.getProperty("curseKey")
-            minecraftVersions.add("1.20.4")
+            minecraftVersions.add(project.minecraft_version)
         }
         modrinth {
             projectId = "VepYPOdy"
             accessToken = releaseProp.getProperty('modrinthKey')
-            minecraftVersions.add("1.20.4")
+            minecraftVersions.add(project.minecraft_version)
         }
     }
 }
