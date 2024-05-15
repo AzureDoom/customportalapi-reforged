@@ -1,3 +1,3 @@
-v1.0.5
+v1.0.6
 
-- NeoForge Network Update, thanks to AnonymousHacker1279.
+- Backported Fixes custom particles/sounds not working. Thanks AnonymousHacker1279!
