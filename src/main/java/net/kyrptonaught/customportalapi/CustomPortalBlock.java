@@ -10,8 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,9 +23,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.swing.text.html.BlockView;
-import java.util.Random;
 
 public class CustomPortalBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -65,13 +62,10 @@ public class CustomPortalBlock extends Block {
         builder.add(AXIS);
     }
 
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return ItemStack.EMPTY;
-    }
-
-    public void randomDisplayTick(BlockState state, Level world, BlockPos pos, Random random) {
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (random.nextInt(100) == 0)
-            world.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
+            level.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
                     SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
 
         for (var i = 0; i < 4; ++i) {
@@ -82,15 +76,15 @@ public class CustomPortalBlock extends Block {
             var h = ((double) random.nextFloat() - 0.5D) * 0.5D;
             var j = ((double) random.nextFloat() - 0.5D) * 0.5D;
             int k = random.nextInt(2) * 2 - 1;
-            if (!world.getBlockState(pos.west()).is(this) && !world.getBlockState(pos.east()).is(this)) {
+            if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
                 d = (double) pos.getX() + 0.5D + 0.25D * (double) k;
                 g = random.nextFloat() * 2.0F * (float) k;
             } else {
                 f = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
                 j = random.nextFloat() * 2.0F * (float) k;
             }
-            world.addParticle(new BlockParticleOption(ParticleInit.CUSTOMPORTALPARTICLE.get(),
-                    getPortalBase(world, pos).defaultBlockState()), d, e, f, g, h, j);
+            level.addParticle(new BlockParticleOption(ParticleInit.CUSTOMPORTALPARTICLE.get(),
+                    getPortalBase(level, pos).defaultBlockState()), d, e, f, g, h, j);
         }
     }
 
