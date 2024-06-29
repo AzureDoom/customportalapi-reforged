@@ -78,6 +78,8 @@ public class CustomPortalHelper {
             return state.getValue(CustomPortalBlock.AXIS);
         if (state.getBlock() instanceof NetherPortalBlock)
             return state.getValue(NetherPortalBlock.AXIS);
+        if (state.getBlock() instanceof EndPortalBlock)
+            return Direction.Axis.Y;
         return Axis.X;
     }
 
