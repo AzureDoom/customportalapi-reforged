@@ -29,10 +29,8 @@ public class CustomTeleporter {
 
     public static void TPToDim(Level world, Entity entity, Block portalBase, BlockPos portalPos) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
-        if (link == null)
-            return;
-        if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
-            return;
+        if (link == null) return;
+        if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP) return;
         ResourceKey<Level> destKey = world.dimension() == CustomPortalsMod.dims.get(
                 link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerLevel destination = ((ServerLevel) world).getServer().getLevel(destKey);
@@ -56,6 +54,10 @@ public class CustomTeleporter {
         Direction.Axis portalAxis = CustomPortalHelper.getAxisFrom(entity.level().getBlockState(enteredPortalPos));
         BlockUtil.FoundRectangle fromPortalRectangle = portalFrameTesterFactory.createInstanceOfPortalFrameTester().init(
                 entity.level(), enteredPortalPos, portalAxis, frameBlock).getRectangle();
+
+        if (fromPortalRectangle.minCorner == null)
+            return null;
+
         DimensionalBlockPos destinationPos = CustomPortalsMod.portalLinkingStorage.getDestination(
                 fromPortalRectangle.minCorner, entity.level().dimension());
 

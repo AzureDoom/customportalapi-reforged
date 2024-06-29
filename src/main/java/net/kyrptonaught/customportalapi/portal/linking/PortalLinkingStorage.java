@@ -20,8 +20,7 @@ public class PortalLinkingStorage extends SavedData {
     }
 
     public static SavedData.Factory<PortalLinkingStorage> factory() {
-        return new SavedData.Factory<PortalLinkingStorage>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt,
-                DataFixTypes.SAVED_DATA_MAP_DATA);
+        return new SavedData.Factory<PortalLinkingStorage>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt, DataFixTypes.LEVEL);
     }
 
     public static PortalLinkingStorage fromNbt(CompoundTag tag) {

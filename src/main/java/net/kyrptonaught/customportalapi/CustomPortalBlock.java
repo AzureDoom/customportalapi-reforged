@@ -12,9 +12,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomPortalBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -36,7 +39,7 @@ public class CustomPortalBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return switch (state.getValue(AXIS)) {
             case Z -> Z_SHAPE;
             case Y -> Y_SHAPE;
@@ -45,7 +48,17 @@ public class CustomPortalBlock extends Block {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(AXIS);
+    }
+
+    @Override
+    public @NotNull ItemStack getCloneItemStack(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull BlockState state) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction direction, @NotNull BlockState newState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos posFrom) {
         var block = getPortalBase((Level) world, pos);
         var link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
@@ -58,30 +71,25 @@ public class CustomPortalBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(AXIS);
-    }
-
-    @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, RandomSource random) {
         if (random.nextInt(100) == 0)
-            level.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D,
+            level.playLocalSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
                     SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
 
         for (var i = 0; i < 4; ++i) {
-            var d = (double) pos.getX() + random.nextDouble();
-            var e = (double) pos.getY() + random.nextDouble();
-            var f = (double) pos.getZ() + random.nextDouble();
-            var g = ((double) random.nextFloat() - 0.5D) * 0.5D;
-            var h = ((double) random.nextFloat() - 0.5D) * 0.5D;
-            var j = ((double) random.nextFloat() - 0.5D) * 0.5D;
+            var d = pos.getX() + random.nextDouble();
+            var e = pos.getY() + random.nextDouble();
+            var f = pos.getZ() + random.nextDouble();
+            var g = (random.nextFloat() - 0.5D) * 0.5D;
+            var h = (random.nextFloat() - 0.5D) * 0.5D;
+            var j = (random.nextFloat() - 0.5D) * 0.5D;
             int k = random.nextInt(2) * 2 - 1;
             if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
-                d = (double) pos.getX() + 0.5D + 0.25D * (double) k;
-                g = random.nextFloat() * 2.0F * (float) k;
+                d = pos.getX() + 0.5D + 0.25D * k;
+                g = random.nextFloat() * 2.0F * k;
             } else {
-                f = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
-                j = random.nextFloat() * 2.0F * (float) k;
+                f = pos.getZ() + 0.5D + 0.25D * k;
+                j = random.nextFloat() * 2.0F * k;
             }
             level.addParticle(new BlockParticleOption(ParticleInit.CUSTOMPORTALPARTICLE.get(),
                     getPortalBase(level, pos).defaultBlockState()), d, e, f, g, h, j);
@@ -90,14 +98,12 @@ public class CustomPortalBlock extends Block {
 
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level world, BlockPos pos, @NotNull Entity entity) {
         var entityInPortal = (EntityInCustomPortal) entity;
         entityInPortal.tickInPortal(pos.immutable());
-        if (!entityInPortal.didTeleport()) {
-            if (entityInPortal.getTimeInPortal() >= entity.getPortalWaitTime()) {
-                entityInPortal.setDidTP(true);
-                if (!world.isClientSide()) CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
-            }
+        if (!entityInPortal.didTeleport() && entityInPortal.getTimeInPortal() >= entity.getPortalWaitTime()) {
+            entityInPortal.setDidTP(true);
+            if (!world.isClientSide()) CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
         }
     }
 
