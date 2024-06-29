@@ -8,6 +8,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EndPortalBlock;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -80,6 +81,8 @@ public class CustomPortalHelper {
             return state.getValue(CustomPortalBlock.AXIS);
         if (state.getBlock() instanceof NetherPortalBlock)
             return state.getValue(NetherPortalBlock.AXIS);
+        if (state.getBlock() instanceof EndPortalBlock)
+            return Direction.Axis.Y;
         return Axis.X;
     }
 
