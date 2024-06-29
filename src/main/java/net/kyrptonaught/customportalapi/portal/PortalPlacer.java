@@ -47,27 +47,35 @@ public class PortalPlacer {
         WorldBorder worldBorder = world.getWorldBorder();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
-        for (BlockPos.MutableBlockPos mutable : BlockPos.spiralAround(blockPos, 16, Direction.WEST, Direction.SOUTH)) {
-            BlockPos testingPos = mutable.immutable();
-            if (!worldBorder.isWithinBounds(testingPos))
-                continue;
 
-            int solidY = Math.min(world.getMaxBuildHeight(), world.getMinBuildHeight() + world.getLogicalHeight()) - 5;
-            BlockPos pos = null;
-            while (solidY >= 3) {
-                if (canHoldPortal(world.getBlockState(testingPos.atY(solidY)))) {
-                    BlockPos testRect = portalFrameTester.doesPortalFitAt(world, testingPos.atY(solidY + 1), axis);
+        int topY = Math.min(world.getMaxBuildHeight(), world.getMinBuildHeight() + world.getLogicalHeight()) - 5;
+        int bottomY = world.getMinBuildHeight() + 5;
+
+        if (world.dimension().location().equals(link.dimID)) {
+            if (link.portalSearchYTop != null)
+                topY = link.portalSearchYTop;
+            if (link.portalSearchYBottom != null)
+                bottomY = link.portalSearchYBottom;
+        } else {
+            if (link.returnPortalSearchYTop != null)
+                topY = link.returnPortalSearchYTop;
+            if (link.returnPortalSearchYBottom != null)
+                bottomY = link.returnPortalSearchYBottom;
+        }
+
+
+        for (BlockPos.MutableBlockPos mutable : BlockPos.spiralAround(blockPos, 32, Direction.WEST, Direction.SOUTH)) {
+            BlockPos testingPos = mutable.immutable();
+            if (!worldBorder.isWithinBounds(testingPos)) continue;
+
+            for (int y = topY; y >= bottomY; y--) {
+                if (canHoldPortal(world.getBlockState(testingPos.atY(y)))) {
+                    BlockPos testRect = portalFrameTester.doesPortalFitAt(world, testingPos.atY(y + 1), axis);
                     if (testRect != null) {
-                        pos = testRect;
-                        break;
+                        portalFrameTester.createPortal(world, testRect, frameBlock, axis);
+                        return Optional.of(portalFrameTester.getRectangle());
                     }
                 }
-                solidY--;
-            }
-
-            if (pos != null) {
-                portalFrameTester.createPortal(world, pos, frameBlock, axis);
-                return Optional.of(portalFrameTester.getRectangle());
             }
         }
         portalFrameTester.createPortal(world, blockPos, frameBlock, axis);
