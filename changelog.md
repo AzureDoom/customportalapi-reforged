@@ -1,3 +1,4 @@
-v1.0.6
+v1.0.7
 
-- Backported Fixes custom particles/sounds not working. Thanks AnonymousHacker1279!
+- Adds min/max dim height checks for Portal generation.
+- Clean up unused code/formarted existing code.
