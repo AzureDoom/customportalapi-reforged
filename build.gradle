@@ -76,7 +76,7 @@ publishing {
     repositories {
         maven {
             name = "azurelib"
-            url = "https://libs.azuredoom.com:4443/mods"
+            url = "https://maven.azuredoom.com/mods"
             credentials(PasswordCredentials)
             authentication {
                 basic(BasicAuthentication)
