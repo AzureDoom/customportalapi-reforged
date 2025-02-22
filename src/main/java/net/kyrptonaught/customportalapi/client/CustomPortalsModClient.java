@@ -19,7 +19,7 @@ public class CustomPortalsModClient {
 
     @SubscribeEvent
     public static void onBlockColors(RegisterColorHandlersEvent.Block event) {
-        event.getBlockColors().register((state, world, pos, tintIndex) -> {
+        event.register((state, world, pos, tintIndex) -> {
             if (pos != null && world instanceof RenderChunkRegion) {
                 var block = CustomPortalHelper.getPortalBase(((ChunkRendererRegionAccessor) world).getLevel(), pos);
                 var link = CustomPortalApiRegistry.getPortalLinkFromBase(block);

@@ -5,6 +5,8 @@ import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.BlockParticleOption;
+import org.jetbrains.annotations.NotNull;
+
 public class CustomPortalParticle extends PortalParticle {
     protected CustomPortalParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
         super(clientWorld, d, e, f, g, h, i);
@@ -17,7 +19,7 @@ public class CustomPortalParticle extends PortalParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(BlockParticleOption blockStateParticleEffect, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(BlockParticleOption blockStateParticleEffect, @NotNull ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
             var portalParticle = new CustomPortalParticle(clientWorld, d, e, f, g, h, i);
             portalParticle.pickSprite(this.spriteProvider);
             var block = blockStateParticleEffect.getState().getBlock();

@@ -28,7 +28,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 public class CustomPortalBlock extends Block implements Portal {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
     protected static final VoxelShape X_SHAPE = Block.box(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
@@ -107,7 +106,7 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public int getPortalTransitionTime(ServerLevel world, Entity entity) {
+    public int getPortalTransitionTime(@NotNull ServerLevel world, @NotNull Entity entity) {
         if (entity instanceof Player playerEntity) {
             return Math.max(1, world.getGameRules().getInt(playerEntity.getAbilities().invulnerable ? GameRules.RULE_PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.RULE_PLAYERS_NETHER_PORTAL_DEFAULT_DELAY));
         } else {
@@ -120,12 +119,12 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public @Nullable DimensionTransition getPortalDestination(ServerLevel world, Entity entity, BlockPos pos) {
+    public @Nullable DimensionTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
         return CustomTeleporter.createTeleportTarget(world, entity, getPortalBase(world, pos), pos);
     }
 
     @Override
-    public Transition getLocalTransition() {
+    public @NotNull Transition getLocalTransition() {
         return Transition.CONFUSION;
     }
 }

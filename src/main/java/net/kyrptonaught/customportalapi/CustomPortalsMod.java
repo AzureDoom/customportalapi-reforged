@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 import static net.kyrptonaught.customportalapi.CustomPortalsMod.MOD_ID;
 
-@Mod(MOD_ID)
+@Mod(CustomPortalsMod.MOD_ID)
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class CustomPortalsMod {
     public static final String MOD_ID = "cpapireforged";
