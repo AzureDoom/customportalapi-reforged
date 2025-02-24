@@ -35,7 +35,7 @@ public class CustomPortalBuilder {
      * This should be called last, only when you are finished configuring the portal
      */
     public void registerPortal() {
-        //CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.get(portalLink.block), portalLink);
+        CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.get(portalLink.block), portalLink);
     }
 
     /**
