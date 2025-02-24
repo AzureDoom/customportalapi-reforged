@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LevelRenderer.class)
 public class WorldRendererMixin {
-
     @Shadow
     @Final
     private Minecraft minecraft;

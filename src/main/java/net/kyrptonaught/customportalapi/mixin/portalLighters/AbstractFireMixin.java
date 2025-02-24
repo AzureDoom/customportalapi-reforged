@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BaseFireBlock.class)
 public class AbstractFireMixin {
-
     @Inject(method = "onPlace", at = @At("HEAD"), cancellable = true)
     public void detectCustomPortal(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         if (PortalPlacer.attemptPortalLight(world, pos, PortalIgnitionSource.FIRE))

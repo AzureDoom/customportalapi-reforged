@@ -13,7 +13,6 @@ import net.minecraft.world.level.saveddata.SavedData;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PortalLinkingStorage extends SavedData {
-
     private final ConcurrentHashMap<ResourceLocation, ConcurrentHashMap<BlockPos, DimensionalBlockPos>> portalLinks = new ConcurrentHashMap<>();
 
     public PortalLinkingStorage() {

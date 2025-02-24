@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LiquidBlock.class)
 public abstract class FluidBlockPlacedMixin {
-
     @Inject(method = "onPlace", at = @At("HEAD"))
     public void fluidPlacedAttemptPortalLight(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         if (state.getFluidState().isSource())

@@ -7,8 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(RenderChunkRegion.class)
 public interface ChunkRendererRegionAccessor {
-
     @Accessor("level")
     Level getLevel();
-
 }

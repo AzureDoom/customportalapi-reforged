@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @OnlyIn(Dist.CLIENT)
 @Mixin(Gui.class)
 public class InGameHudMixin {
-
     @Shadow
     @Final
     private Minecraft minecraft;
