@@ -38,17 +38,17 @@ public class CustomPortalApiRegistry {
     }
 
     public static void addPortal(Block frameBlock, PortalLink link) {
-        if (frameBlock == null) CustomPortalsMod.logError("Frame block must not be null");
-        if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block must not be null");
-        if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source must not be null");
-        if (link.dimID == null) CustomPortalsMod.logError("Dimension is null");
+        if (frameBlock == null) throw new RuntimeException("Frame block must not be null");
+        if (link.getPortalBlock() == null) throw new RuntimeException("Portal block must not be null");
+        if (link.portalIgnitionSource == null) throw new RuntimeException("Portal ignition source must not be null");
+        if (link.dimID == null) throw new RuntimeException("Dimension is null");
         if (!CustomPortalsMod.dims.isEmpty() && !CustomPortalsMod.dims.containsKey(link.dimID))
-            CustomPortalsMod.logError("Dimension not found");
+            throw new RuntimeException("Dimension not found");
         if (CustomPortalsMod.getDefaultPortalBlock() == null)
-            CustomPortalsMod.logError("Built-in CustomPortalBlock is null");
+            throw new RuntimeException("Built-in CustomPortalBlock is null");
 
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
-            CustomPortalsMod.logError(
+            throw new RuntimeException(
                     "A portal of the frame '" + frameBlock + "' is already registered"
             );
         } else {
