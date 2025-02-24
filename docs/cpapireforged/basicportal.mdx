@@ -9,7 +9,7 @@ To add a portal in your mod, simply call the following in your mods constructor:
 public class MyMod {
 
     public MyMod(IEventBus modEventBus) {
-        NeoForge.EVENT_BUS.addListener(this::registerPortals);
+        bus.addListener(this::registerPortals);
     }
 
     private void registerPortals(CustomPortalBuilder event) {
