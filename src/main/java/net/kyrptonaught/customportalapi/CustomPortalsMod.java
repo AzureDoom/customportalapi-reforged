@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 @Mod(CustomPortalsMod.MOD_ID)
-//@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class CustomPortalsMod {
     public static final String MOD_ID = "cpapireforged";
     private static final Logger LOGGER = LogUtils.getLogger();
