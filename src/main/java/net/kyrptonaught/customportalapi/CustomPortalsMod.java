@@ -15,8 +15,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -50,7 +49,7 @@ public class CustomPortalsMod {
     public CustomPortalsMod(IEventBus bus) {
         BLOCKS.register(bus);
         bus.addListener(this::onCommonStartUp);
-        NeoForge.EVENT_BUS.addListener(this::createPortals);
+        bus.addListener(this::createPortals);
         NeoForge.EVENT_BUS.addListener(this::onServerStart);
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
@@ -66,13 +65,12 @@ public class CustomPortalsMod {
     }
 
     public void onCommonStartUp(FMLCommonSetupEvent event) {
-        NeoForge.EVENT_BUS.post(new CustomPortalRegistrationEvent());
+        ModLoader.postEvent(new CustomPortalRegistrationEvent());
     }
 
     public void createPortals(CustomPortalRegistrationEvent event) {
-        System.out.println("Registering portal");
-        CustomPortalBuilder builder = CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(ResourceLocation.withDefaultNamespace("the_nether")).lightWithWater().tintColor(46, 5, 25);
-        event.register(builder);
+//        CustomPortalBuilder builder = CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(ResourceLocation.withDefaultNamespace("the_nether")).lightWithWater().tintColor(46, 5, 25);
+//        event.register(builder);
     }
 
     private void onServerStart(ServerStartedEvent event) {
