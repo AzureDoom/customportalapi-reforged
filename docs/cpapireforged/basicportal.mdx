@@ -12,7 +12,7 @@ public class MyMod {
         bus.addListener(this::registerPortals);
     }
 
-    private void registerPortals(CustomPortalBuilder event) {
+    private void registerPortals(CustomPortalRegistrationEvent event) {
             // We need to register the portal
             event.register(
             // Here is where we start to register the portal in the common setup event
