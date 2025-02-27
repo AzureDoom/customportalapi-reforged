@@ -33,7 +33,7 @@ public class CustomPortalsMod {
     public static final String MOD_ID = "cpapireforged";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Registries.BLOCK, MOD_ID);
+    public static DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
 
     public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register("custom_portal_block",
             () -> new CustomPortalBlock(
