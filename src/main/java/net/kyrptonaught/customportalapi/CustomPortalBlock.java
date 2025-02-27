@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -55,8 +56,8 @@ public class CustomPortalBlock extends Block implements Portal {
 
     @Override
     public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction direction, @NotNull BlockState newState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos posFrom) {
-        var block = getPortalBase((Level) world, pos);
-        var link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+        Block block = getPortalBase((Level) world, pos);
+        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world,
                     pos, CustomPortalHelper.getAxisFrom(state), block);
@@ -77,13 +78,13 @@ public class CustomPortalBlock extends Block implements Portal {
             level.playLocalSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
                     SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
 
-        for (var i = 0; i < 4; ++i) {
-            var d = pos.getX() + random.nextDouble();
-            var e = pos.getY() + random.nextDouble();
-            var f = pos.getZ() + random.nextDouble();
-            var g = (random.nextFloat() - 0.5D) * 0.5D;
-            var h = (random.nextFloat() - 0.5D) * 0.5D;
-            var j = (random.nextFloat() - 0.5D) * 0.5D;
+        for (int i = 0; i < 4; ++i) {
+            double d = pos.getX() + random.nextDouble();
+            double e = pos.getY() + random.nextDouble();
+            double f = pos.getZ() + random.nextDouble();
+            double g = (random.nextFloat() - 0.5D) * 0.5D;
+            double h = (random.nextFloat() - 0.5D) * 0.5D;
+            double j = (random.nextFloat() - 0.5D) * 0.5D;
             int k = random.nextInt(2) * 2 - 1;
             if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
                 d = pos.getX() + 0.5D + 0.25D * k;

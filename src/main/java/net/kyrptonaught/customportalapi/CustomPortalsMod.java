@@ -9,6 +9,10 @@ import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -79,17 +83,17 @@ public class CustomPortalsMod {
     }
 
     private void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        var player = event.getEntity();
-        var world = event.getLevel();
-        var hand = event.getHand();
-        var stack = player.getItemInHand(hand);
+        Player player = event.getEntity();
+        Level world = event.getLevel();
+        InteractionHand hand = event.getHand();
+        ItemStack stack = player.getItemInHand(hand);
 
         if (!world.isClientSide()) {
-            var item = stack.getItem();
+            Item item = stack.getItem();
             if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
-                var hit = player.pick(6, 1, false);
+                HitResult hit = player.pick(6, 1, false);
                 if (hit.getType() == HitResult.Type.BLOCK) {
-                    var blockHit = (BlockHitResult) hit;
+                    BlockHitResult blockHit = (BlockHitResult) hit;
                     if (!PortalPlacer.attemptPortalLight(world,
                             blockHit.getBlockPos().relative(blockHit.getDirection()),
                             PortalIgnitionSource.ItemUseSource(item)))
