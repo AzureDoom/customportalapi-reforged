@@ -1,9 +1,5 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
@@ -25,10 +21,19 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
+
 public abstract class PortalFrameTester {
+
     public BlockPos lowerCorner;
+
     protected HashSet<Block> VALID_FRAME = null;
+
     protected int foundPortalBlocks;
+
     protected LevelAccessor world;
 
     public static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
@@ -50,7 +55,8 @@ public abstract class PortalFrameTester {
             return blockState.getFluidState().is(FluidTags.LAVA);
         if (ignitionSource.sourceType == PortalIgnitionSource.SourceType.FLUID) {
             return BuiltInRegistries.FLUID.getKey(
-                    blockState.getFluidState().getType()) == ignitionSource.ignitionSourceID;
+                blockState.getFluidState().getType()
+            ) == ignitionSource.ignitionSourceID;
         }
         return false;
     }
@@ -59,7 +65,13 @@ public abstract class PortalFrameTester {
 
     public abstract Optional<PortalFrameTester> getNewPortal(LevelAccessor worldAccess, BlockPos blockPos, Axis axis, Block... foundations);
 
-    public abstract Optional<PortalFrameTester> getOrEmpty(LevelAccessor worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations);
+    public abstract Optional<PortalFrameTester> getOrEmpty(
+        LevelAccessor worldAccess,
+        BlockPos blockPos,
+        Predicate<PortalFrameTester> predicate,
+        Direction.Axis axis,
+        Block... foundations
+    );
 
     public abstract boolean isAlreadyLitPortalFrame();
 
@@ -81,7 +93,14 @@ public abstract class PortalFrameTester {
 
     public abstract Vec3 getEntityOffsetInPortal(BlockUtil.FoundRectangle arg, Entity entity, Direction.Axis portalAxis);
 
-    public abstract DimensionTransition getTPTargetInPortal(ServerLevel world, FoundRectangle portalRect, Axis portalAxis, Vec3 prevOffset, Entity entity, PortalLink link);
+    public abstract DimensionTransition getTPTargetInPortal(
+        ServerLevel world,
+        FoundRectangle portalRect,
+        Axis portalAxis,
+        Vec3 prevOffset,
+        Entity entity,
+        PortalLink link
+    );
 
     protected BlockPos getLowerCorner(BlockPos blockPos, Direction.Axis axis1, Direction.Axis axis2) {
         if (!validStateInsidePortal(world.getBlockState(blockPos), VALID_FRAME))
@@ -90,14 +109,20 @@ public abstract class PortalFrameTester {
     }
 
     protected BlockPos getLimitForAxis(BlockPos blockPos, Direction.Axis axis) {
-        if (blockPos == null || axis == null) return null;
+        if (blockPos == null || axis == null)
+            return null;
         int offset = 1;
         while (validStateInsidePortal(world.getBlockState(blockPos.relative(axis, -offset)), VALID_FRAME)) {
             offset++;
-            if (offset > 20) return null;
-            if ((axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getMinBuildHeight()) ||
-                    (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder().isWithinBounds(
-                            blockPos.relative(axis, -offset))))
+            if (offset > 20)
+                return null;
+            if (
+                (axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getMinBuildHeight()) ||
+                    (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder()
+                        .isWithinBounds(
+                            blockPos.relative(axis, -offset)
+                        ))
+            )
                 return null;
         }
         return blockPos.relative(axis, -(offset - 1));
@@ -120,17 +145,25 @@ public abstract class PortalFrameTester {
     protected boolean checkForValidFrame(Direction.Axis axis1, Direction.Axis axis2, int size1, int size2) {
         BlockPos checkPos = lowerCorner.mutable();
         for (int i = 0; i < size1; i++) {
-            if (!VALID_FRAME.contains(
-                    world.getBlockState(checkPos.relative(axis2, -1)).getBlock()) || !VALID_FRAME.contains(
-                    world.getBlockState(checkPos.relative(axis2, size2)).getBlock()))
+            if (
+                !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis2, -1)).getBlock()
+                ) || !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis2, size2)).getBlock()
+                )
+            )
                 return false;
             checkPos = checkPos.relative(axis1, 1);
         }
         checkPos = lowerCorner.mutable();
         for (int i = 0; i < size2; i++) {
-            if (!VALID_FRAME.contains(
-                    world.getBlockState(checkPos.relative(axis1, -1)).getBlock()) || !VALID_FRAME.contains(
-                    world.getBlockState(checkPos.relative(axis1, size1)).getBlock()))
+            if (
+                !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis1, -1)).getBlock()
+                ) || !VALID_FRAME.contains(
+                    world.getBlockState(checkPos.relative(axis1, size1)).getBlock()
+                )
+            )
                 return false;
             checkPos = checkPos.relative(axis2, 1);
         }
@@ -140,13 +173,17 @@ public abstract class PortalFrameTester {
     protected void countExistingPortalBlocks(Direction.Axis axis1, Direction.Axis axis2, int size1, int size2) {
         for (int i = 0; i < size1; i++)
             for (int j = 0; j < size2; j++)
-                if (CustomPortalHelper.isInstanceOfCustomPortal(
-                        world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j))))
+                if (
+                    CustomPortalHelper.isInstanceOfCustomPortal(
+                        world.getBlockState(this.lowerCorner.relative(axis1, i).relative(axis2, j))
+                    )
+                )
                     foundPortalBlocks++;
     }
 
     @FunctionalInterface
     public interface PortalFrameTesterFactory {
+
         PortalFrameTester createInstanceOfPortalFrameTester();
     }
 }

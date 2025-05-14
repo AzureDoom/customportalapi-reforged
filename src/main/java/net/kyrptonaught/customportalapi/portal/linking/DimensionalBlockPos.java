@@ -5,7 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 public class DimensionalBlockPos {
+
     public ResourceLocation dimensionType;
+
     public BlockPos pos;
 
     public DimensionalBlockPos(ResourceLocation dimension, BlockPos pos) {

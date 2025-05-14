@@ -1,10 +1,6 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
 import com.google.common.collect.Sets;
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
@@ -25,12 +21,18 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
+
 public class FlatPortalAreaHelper extends PortalFrameTester {
+
     protected final int maxXSize = 21, maxZSize = 21;
+
     protected int xSize = -1, zSize = -1;
 
-    public FlatPortalAreaHelper() {
-    }
+    public FlatPortalAreaHelper() {}
 
     public FlatPortalAreaHelper init(LevelAccessor world, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
         VALID_FRAME = Sets.newHashSet(foundations);
@@ -55,16 +57,34 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         return this;
     }
 
-    public Optional<PortalFrameTester> getNewPortal(LevelAccessor worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
-        return getOrEmpty(worldAccess, blockPos, (areaHelper) -> {
-            return areaHelper.isValidFrame() && areaHelper.foundPortalBlocks == 0;
-        }, axis, foundations);
+    public Optional<PortalFrameTester> getNewPortal(
+        LevelAccessor worldAccess,
+        BlockPos blockPos,
+        Direction.Axis axis,
+        Block... foundations
+    ) {
+        return getOrEmpty(
+            worldAccess,
+            blockPos,
+            areaHelper -> areaHelper.isValidFrame() && areaHelper.foundPortalBlocks == 0,
+            axis,
+            foundations
+        );
     }
 
-    public Optional<PortalFrameTester> getOrEmpty(LevelAccessor worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {
+    public Optional<PortalFrameTester> getOrEmpty(
+        LevelAccessor worldAccess,
+        BlockPos blockPos,
+        Predicate<PortalFrameTester> predicate,
+        Direction.Axis axis,
+        Block... foundations
+    ) {
         return Optional.of(
-                (PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(
-                predicate);
+            (PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)
+        )
+            .filter(
+                predicate
+            );
     }
 
     public boolean isAlreadyLitPortalFrame() {
@@ -78,13 +98,17 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     public void lightPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
         BlockState blockState = CustomPortalHelper.blockWithAxis(
-                link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
-                Direction.Axis.Y);
-        BlockPos.betweenClosed(this.lowerCorner,
-                this.lowerCorner.relative(Direction.Axis.X, this.xSize - 1).relative(Direction.Axis.Z,
-                        this.zSize - 1)).forEach((blockPos) -> {
-            this.world.setBlock(blockPos, blockState, 18);
-        });
+            link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
+            Direction.Axis.Y
+        );
+        BlockPos.betweenClosed(
+            this.lowerCorner,
+            this.lowerCorner.relative(Direction.Axis.X, this.xSize - 1)
+                .relative(
+                    Direction.Axis.Z,
+                    this.zSize - 1
+                )
+        ).forEach(blockPos -> this.world.setBlock(blockPos, blockState, 18));
     }
 
     @Override
@@ -125,7 +149,8 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     @Override
     public boolean isRequestedSize(int attemptWidth, int attemptHeight) {
-        return ((xSize == attemptWidth || attemptHeight == 0) && (zSize == attemptHeight) || attemptWidth == 0) || ((xSize == attemptHeight || attemptHeight == 0) && (zSize == attemptWidth || attemptWidth == 0));
+        return ((xSize == attemptWidth || attemptHeight == 0) && (zSize == attemptHeight) || attemptWidth == 0) || ((xSize == attemptHeight
+            || attemptHeight == 0) && (zSize == attemptWidth || attemptWidth == 0));
     }
 
     @Override
@@ -145,13 +170,20 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     @Override
     public BlockPos doesPortalFitAt(Level world, BlockPos attemptPos, Direction.Axis axis) {
-        BlockUtil.FoundRectangle rect = BlockUtil.getLargestRectangleAround(attemptPos.above(), Direction.Axis.X, 4,
-                Direction.Axis.Z, 4, blockPos -> {
-                    return world.getBlockState(blockPos).isSolid() && !world.getBlockState(
-                            blockPos.above()).isSolid() && !world.getBlockState(
-                            blockPos.above()).liquid() && !world.getBlockState(
-                            blockPos.above(2)).isSolid() && !world.getBlockState(blockPos.above(2)).liquid();
-                });
+        BlockUtil.FoundRectangle rect = BlockUtil.getLargestRectangleAround(
+            attemptPos.above(),
+            Direction.Axis.X,
+            4,
+            Direction.Axis.Z,
+            4,
+            blockPos -> world.getBlockState(blockPos).isSolid() && !world.getBlockState(
+                blockPos.above()
+            ).isSolid() && !world.getBlockState(
+                blockPos.above()
+            ).liquid() && !world.getBlockState(
+                blockPos.above(2)
+            ).isSolid() && !world.getBlockState(blockPos.above(2)).liquid()
+        );
         return rect.axis1Size >= 4 && rect.axis2Size >= 4 ? rect.minCorner : null;
     }
 
@@ -162,26 +194,39 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         double zSize = arg.axis2Size - entityDimensions.width();
 
         double deltaX = Mth.inverseLerp(entity.getX(), arg.minCorner.getX(), arg.minCorner.getX() + xSize);
-        double deltaY = Mth.inverseLerp(entity.getY(), arg.minCorner.getY() - 1, arg.minCorner.getY() + 1);
+        double deltaY = Mth.inverseLerp(entity.getY(), arg.minCorner.getY() - 1D, arg.minCorner.getY() + 1D);
         double deltaZ = Mth.inverseLerp(entity.getZ(), arg.minCorner.getZ(), arg.minCorner.getZ() + zSize);
 
         return new Vec3(deltaX, deltaY, deltaZ);
     }
 
     @Override
-    public DimensionTransition getTPTargetInPortal(ServerLevel world, FoundRectangle portalRect, Axis portalAxis, Vec3 prevOffset, Entity entity, PortalLink link) {
-        EntityDimensions entityDimensions = entity.getDimensions(entity.getPose());
-        double xSize = portalRect.axis1Size - entityDimensions.width();
-        double zSize = portalRect.axis2Size - entityDimensions.width();
+    public DimensionTransition getTPTargetInPortal(
+        ServerLevel world,
+        FoundRectangle portalRect,
+        Axis portalAxis,
+        Vec3 prevOffset,
+        Entity entity,
+        PortalLink link
+    ) {
+        var entityDimensions = entity.getDimensions(entity.getPose());
+        var xSize = portalRect.axis1Size - entityDimensions.width();
+        var zSize = portalRect.axis2Size - entityDimensions.width();
 
-        double x = Mth.lerp(prevOffset.x, portalRect.minCorner.getX(), portalRect.minCorner.getX() + xSize);
-        double y = Mth.lerp(prevOffset.y, portalRect.minCorner.getY() - 1, portalRect.minCorner.getY() + 1);
-        double z = Mth.lerp(prevOffset.z, portalRect.minCorner.getZ(), portalRect.minCorner.getZ() + zSize);
+        var x = Mth.lerp(prevOffset.x, portalRect.minCorner.getX(), portalRect.minCorner.getX() + xSize);
+        var z = Mth.lerp(prevOffset.z, portalRect.minCorner.getZ(), portalRect.minCorner.getZ() + zSize);
 
         DimensionTransition.PostDimensionTransition post = DimensionTransition.PLAY_PORTAL_SOUND.then(entityx -> {
             entityx.placePortalTicket(portalRect.minCorner);
             link.executePostTPEvent(entityx);
         });
-        return new DimensionTransition(world, new Vec3(x, portalRect.minCorner.getY() + 1, z), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot(), post);
+        return new DimensionTransition(
+            world,
+            new Vec3(x, portalRect.minCorner.getY() + 1D, z),
+            entity.getDeltaMovement(),
+            entity.getYRot(),
+            entity.getXRot(),
+            post
+        );
     }
 }

@@ -10,5 +10,4 @@ public interface ChunkRendererRegionAccessor {
 
     @Accessor("level")
     Level getLevel();
-
 }

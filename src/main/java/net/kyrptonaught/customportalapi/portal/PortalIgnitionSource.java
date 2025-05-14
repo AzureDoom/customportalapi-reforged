@@ -16,17 +16,27 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class PortalIgnitionSource {
-    public final static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED,
-            BuiltInRegistries.BLOCK.getKey(Blocks.FIRE));
-    public final static PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
+
+    public static final PortalIgnitionSource FIRE = new PortalIgnitionSource(
+        SourceType.BLOCKPLACED,
+        BuiltInRegistries.BLOCK.getKey(Blocks.FIRE)
+    );
+
+    public static final PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
 
     public enum SourceType {
-        USEITEM, BLOCKPLACED, FLUID, CUSTOM
+        USEITEM,
+        BLOCKPLACED,
+        FLUID,
+        CUSTOM
     }
 
     private static final HashSet<Item> USEITEMS = new HashSet<>();
+
     public SourceType sourceType;
+
     public ResourceLocation ignitionSourceID;
+
     public Player player;
 
     private PortalIgnitionSource(SourceType sourceType, ResourceLocation ignitionSourceID) {
@@ -58,17 +68,21 @@ public class PortalIgnitionSource {
 
     // TODO: implement
     @Deprecated
-    public void withCondition(BiFunction<Level, BlockPos, Boolean> condition) {
-
-    }
+    public void withCondition(BiFunction<Level, BlockPos, Boolean> condition) {}
 
     public boolean isWater() {
-        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(
-                a -> a.is(FluidTags.WATER)).isPresent();
+        return Optional.of(BuiltInRegistries.FLUID.get(ignitionSourceID))
+            .filter(
+                a -> a.is(FluidTags.WATER)
+            )
+            .isPresent();
     }
 
     public boolean isLava() {
-        return Optional.ofNullable(BuiltInRegistries.FLUID.get(ignitionSourceID)).filter(
-                a -> a.is(FluidTags.LAVA)).isPresent();
+        return Optional.of(BuiltInRegistries.FLUID.get(ignitionSourceID))
+            .filter(
+                a -> a.is(FluidTags.LAVA)
+            )
+            .isPresent();
     }
 }

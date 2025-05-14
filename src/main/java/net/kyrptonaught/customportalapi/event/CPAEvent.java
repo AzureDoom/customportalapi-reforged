@@ -3,12 +3,12 @@ package net.kyrptonaught.customportalapi.event;
 import java.util.function.Function;
 
 public class CPAEvent<I, O> {
+
     private Function<I, O> event;
+
     private O defaultOutput;
 
-    public CPAEvent() {
-
-    }
+    public CPAEvent() {}
 
     public CPAEvent(O defaultOutput) {
         this.defaultOutput = defaultOutput;

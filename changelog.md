@@ -1,4 +1,7 @@
-v1.0.10
+v1.2.0
 
-- Ported to 1.21.1
-- Fire post teleport event again - AnonymousHacker1279
+- Change registering portals to an event on the mod bus - Wolfieboy09
+- Update the wiki for these changes - Wolfieboy09
+- Move to RuntimeException over logging an error to get the user's attention on why it won't work - Wolfieboy09
+- Code cleanup - Wolfieboy09
+- Fixes portal colors.

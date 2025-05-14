@@ -1,0 +1,51 @@
+# Custom Portal API Reforged
+
+NeoForge port of Fabrics Custom Portal API, updated for newer versions of MC.
+
+This library allows developers to create portals to their custom dimensions easily. These custom portals will function exactly like nether portals, except being fully customizable. You can control the frame block, portal block, tinting, ignition source, destination, and more!
+
+![Header](https://i.imgur.com/jqupA9K.png)
+
+## Developers
+To add Custom Portal API Reforged to your project as a dependency you need to add the following to your `build.gradle` (NOT THE BUILD SCRIPT):
+```gradle
+repositories {
+	maven {
+		name = "AzureDoom Mods"
+		url = "https://maven.azuredoom.com/mods"
+	}
+}
+```
+
+### How Custom Portal API Reforged gets added to your dependencies varies based on modloader and Minecraft Version.
+
+The Gradle property `MCVERSION` should be something like `1.0.11` with Mod's version.
+
+The Gradle property `MODVERSION` should be something like `1.21.1` with Minecraft's version.
+
+Here are common dependency setups for Forge 1.20.1 and NeoForge 1.21.1+.
+
+```gradle
+dependencies {
+	//NeoForge 1.21.+
+	implementation "net.kyrptonaught.customportalapi:cpapireforged-neo-MCVERSION:MODVERSION"
+
+	//Forge (No longer supported past 1.20.1, use NeoForge)
+	implementation fg.deobf('net.kyrptonaught.customportalapi:customportalapi-reforged:MODVERSION')
+}
+```
+
+For Forge 1.20.1 Gradle users, you will need to enable Mixin refmaps in your client sourceset. This can be done by adding 2 lines inside of your client runs, to look like below.
+
+```gradle
+runs {
+	client {
+		// Add these two lines
+		property 'mixin.env.remapRefMap', 'true'
+		property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+		// The rest of the code that was already here
+		// ...
+	}
+}
+```

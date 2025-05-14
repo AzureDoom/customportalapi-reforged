@@ -3,6 +3,8 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version "${neo_moddev}"
     id 'me.modmuss50.mod-publish-plugin' version "${modmuss50_mod_publish_version}"
+    id 'org.moddedmc.wiki.toolkit' version '0.2.5'
+    id 'com.diffplug.spotless' version "7.0.0.BETA3"
 }
 
 import groovy.json.JsonOutput
@@ -85,11 +87,27 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+wiki {
+    if (file('key.properties').exists()) {
+        def releaseProp = new Properties()
+        File secretPropsFile = file("key.properties")
+        releaseProp.load(secretPropsFile.newInputStream())
+        wikiAccessToken = releaseProp.getProperty("wikiKey")
+    }
+    docs {
+        // The name of the object (examplemod) should match the registered wiki project ID (if it exists).
+        cpapireforged {
+            // The path to the folder containing the documentation metadata file (sinytra-wiki.json)
+            root = file('docs/cpapireforged')
+        }
+    }
+}
+
 publishing {
     repositories {
         maven {
             name = "azurelib"
-            url = "https://libs.azuredoom.com:4443/mods"
+            url = "https://maven.azuredoom.com/mods"
             credentials(PasswordCredentials)
             authentication {
                 basic(BasicAuthentication)
@@ -142,4 +160,18 @@ if (file('key.properties').exists()) {
             minecraftVersions.add(project.minecraft_version)
         }
     }
+}
+
+spotless {
+    java {
+        eclipse().configFile("$rootDir/eclipse-formatter.xml")
+        endWithNewline()
+        importOrder("", "java", group.toString(), "\\#")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+    }
+}
+
+tasks.build {
+    dependsOn("spotlessApply")
 }

@@ -1,9 +1,5 @@
 package net.kyrptonaught.customportalapi.api;
 
-import net.kyrptonaught.customportalapi.*;
-import net.kyrptonaught.customportalapi.event.CPASoundEventData;
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.util.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -12,9 +8,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.event.CPASoundEventData;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
+import net.kyrptonaught.customportalapi.util.PortalLink;
+import net.kyrptonaught.customportalapi.util.SHOULDTP;
 
 public class CustomPortalBuilder {
+
     private final PortalLink portalLink;
 
     private CustomPortalBuilder() {
@@ -31,8 +39,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register the portal when completed.
-     * This should be called last, only when you are finished configuring the portal
+     * Register the portal when completed. This should be called last, only when you are finished configuring the portal
      */
     public void registerPortal() {
         CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.get(portalLink.block), portalLink);
@@ -115,7 +122,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition yourself.
+     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition
+     * yourself.
      */
     public CustomPortalBuilder customIgnitionSource(ResourceLocation customSourceID) {
         portalLink.portalIgnitionSource = PortalIgnitionSource.CustomSource(customSourceID);
@@ -123,7 +131,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition yourself.
+     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition
+     * yourself.
      */
     public CustomPortalBuilder customIgnitionSource(PortalIgnitionSource ignitionSource) {
         portalLink.portalIgnitionSource = ignitionSource;
@@ -131,8 +140,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify the forced size of the portal
-     * Portal will only be ignitable for these exact dimensions
+     * Specify the forced size of the portal Portal will only be ignitable for these exact dimensions
      *
      * @param width  Forced width of portal
      * @param height Forced height of portal
@@ -154,7 +162,8 @@ public class CustomPortalBuilder {
     /**
      * Specify the dimension this portal will return you to
      *
-     * @param returnDimID              Identifer of the dimmension the portal will return you to when leaving destination
+     * @param returnDimID              Identifer of the dimmension the portal will return you to when leaving
+     *                                 destination
      * @param onlyIgnitableInReturnDim Should this portal only be ignitable in returnDimID
      */
     public CustomPortalBuilder returnDim(ResourceLocation returnDimID, boolean onlyIgnitableInReturnDim) {
@@ -164,8 +173,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify that this portal can only be ignited in the Overworld
-     * Attempting to light it in other dimensions will fail
+     * Specify that this portal can only be ignited in the Overworld Attempting to light it in other dimensions will
+     * fail
      */
     public CustomPortalBuilder onlyLightInOverworld() {
         portalLink.onlyIgnitableInReturnDim = true;
@@ -189,8 +198,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register an event to be called immediately before the specified entity is teleported.
-     * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
+     * Register an event to be called immediately before the specified entity is teleported. The teleportation can be
+     * cancelled by returning SHOULDTP.CANCEL_TP
      */
     public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
         portalLink.getBeforeTPEvent().register(event);
@@ -198,8 +207,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register a sound to be played when the player in standing in the portal
-     * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
+     * Register a sound to be played when the player in standing in the portal CPASoundEventData is just a stub for
+     * PositionSoundAmbience as it does not exist serverside
      */
     public CustomPortalBuilder registerInPortalAmbienceSound(Function<Player, CPASoundEventData> event) {
         portalLink.getInPortalAmbienceEvent().register(event);
@@ -207,8 +216,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register a sound to be played when the player teleports
-     * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
+     * Register a sound to be played when the player teleports CPASoundEventData is just a stub for
+     * PositionSoundAmbience as it does not exist serverside
      */
     public CustomPortalBuilder registerPostTPPortalAmbience(Function<Player, CPASoundEventData> event) {
         portalLink.getPostTpPortalAmbienceEvent().register(event);
