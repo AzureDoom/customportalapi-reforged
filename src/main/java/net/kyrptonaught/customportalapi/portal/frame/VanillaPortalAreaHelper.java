@@ -1,6 +1,10 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
 import com.google.common.collect.Sets;
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
@@ -15,16 +19,11 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public class VanillaPortalAreaHelper extends PortalFrameTester {
 
@@ -170,7 +169,7 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public DimensionTransition getTPTargetInPortal(
+    public TeleportTransition getTPTargetInPortal(
         ServerLevel world,
         FoundRectangle portalRect,
         Axis portalAxis,
@@ -189,11 +188,11 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         else if (portalAxis == Direction.Axis.Z)
             x = portalRect.minCorner.getX() + .5D;
 
-        DimensionTransition.PostDimensionTransition post = DimensionTransition.PLAY_PORTAL_SOUND.then(entityx -> {
+        TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entityx -> {
             entityx.placePortalTicket(portalRect.minCorner);
             link.executePostTPEvent(entityx);
         });
-        return new DimensionTransition(world, new Vec3(x, y, z), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot(), post);
+        return new TeleportTransition(world, new Vec3(x, y, z), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot(), post);
     }
 
     public void lightPortal(Block frameBlock) {

@@ -1,6 +1,11 @@
 package net.kyrptonaught.customportalapi;
 
 import com.mojang.logging.LogUtils;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.PortalPlacer;
+import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalAreaHelper;
+import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -8,9 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.IEventBus;
@@ -26,12 +29,6 @@ import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.portal.PortalPlacer;
-import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
-import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalAreaHelper;
-import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
-
 @Mod(CustomPortalsMod.MOD_ID)
 public class CustomPortalsMod {
 
@@ -41,11 +38,11 @@ public class CustomPortalsMod {
 
     public static DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
 
-    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.register(
+    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.registerBlock(
         "custom_portal_block",
-        () -> new CustomPortalBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL)
+        (properties) -> new CustomPortalBlock(properties
                 .noCollission()
+                .randomTicks()
                 .strength(-1)
                 .sound(
                     SoundType.GLASS
@@ -104,10 +101,7 @@ public class CustomPortalsMod {
         portalLinkingStorage = event.getServer()
             .overworld()
             .getDataStorage()
-            .computeIfAbsent(
-                PortalLinkingStorage.factory(),
-                MOD_ID
-            );
+            .computeIfAbsent(PortalLinkingStorage.TYPE);
     }
 
     private void onRightClickItem(PlayerInteractEvent.RightClickItem event) {

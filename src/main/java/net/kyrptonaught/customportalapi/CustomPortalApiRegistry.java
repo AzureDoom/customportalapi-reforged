@@ -1,5 +1,7 @@
 package net.kyrptonaught.customportalapi;
 
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -7,9 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public class CustomPortalApiRegistry {
 

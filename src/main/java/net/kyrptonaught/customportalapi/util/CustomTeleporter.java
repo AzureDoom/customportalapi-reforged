@@ -1,5 +1,10 @@
 package net.kyrptonaught.customportalapi.util;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.portal.PortalPlacer;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.portal.linking.DimensionalBlockPos;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,22 +18,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.portal.PortalPlacer;
-import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
-import net.kyrptonaught.customportalapi.portal.linking.DimensionalBlockPos;
 
 public class CustomTeleporter {
 
     private CustomTeleporter() {}
 
-    public static DimensionTransition createTeleportTarget(Level world, Entity entity, Block portalBase, BlockPos portalPos) {
+    public static TeleportTransition createTeleportTarget(Level world, Entity entity, Block portalBase, BlockPos portalPos) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
         if (link == null)
             return null;
@@ -46,7 +45,7 @@ public class CustomTeleporter {
         return customTPTarget(destination, entity, portalPos, portalBase, link.getFrameTester());
     }
 
-    private static DimensionTransition customTPTarget(
+    private static TeleportTransition customTPTarget(
         ServerLevel destinationWorld,
         Entity entity,
         BlockPos enteredPortalPos,
@@ -85,7 +84,7 @@ public class CustomTeleporter {
         return createDestinationPortal(destinationWorld, entity, portalAxis, fromPortalRectangle, frameBlock.defaultBlockState());
     }
 
-    public static DimensionTransition createDestinationPortal(
+    public static TeleportTransition createDestinationPortal(
         ServerLevel destination,
         Entity entity,
         Direction.Axis axis,
@@ -126,16 +125,16 @@ public class CustomTeleporter {
         return idkWhereToPutYou(destination, entity, blockPos3);
     }
 
-    protected static DimensionTransition idkWhereToPutYou(ServerLevel world, Entity entity, BlockPos pos) {
+    protected static TeleportTransition idkWhereToPutYou(ServerLevel world, Entity entity, BlockPos pos) {
         CustomPortalsMod.logError("Unable to find tp location, forced to place on top of world");
         BlockPos destinationPos = world.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, pos);
-        return new DimensionTransition(
+        return new TeleportTransition(
             world,
             new Vec3(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5),
             entity.getDeltaMovement(),
             entity.getYRot(),
             entity.getXRot(),
-            DimensionTransition.DO_NOTHING
+                TeleportTransition.DO_NOTHING
         );
     }
 }

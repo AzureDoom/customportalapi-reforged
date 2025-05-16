@@ -1,5 +1,9 @@
 package net.kyrptonaught.customportalapi;
 
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.CustomTeleporter;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -9,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
@@ -19,16 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.CustomTeleporter;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public class CustomPortalBlock extends Block implements Portal {
 
@@ -60,33 +60,23 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(@NotNull LevelReader world, @NotNull BlockPos pos, @NotNull BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public @NotNull BlockState updateShape(
-        @NotNull BlockState state,
-        @NotNull Direction direction,
-        @NotNull BlockState newState,
-        @NotNull LevelAccessor world,
-        @NotNull BlockPos pos,
-        @NotNull BlockPos posFrom
-    ) {
-        Block block = getPortalBase((Level) world, pos);
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        Block block = getPortalBase((Level) level, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester()
-                .createInstanceOfPortalFrameTester()
-                .init(
-                    world,
-                    pos,
-                    CustomPortalHelper.getAxisFrom(state),
-                    block
-                );
-            if (portalFrameTester.isAlreadyLitPortalFrame())
-                return super.updateShape(state, direction, newState, world, pos, posFrom);
+                    .createInstanceOfPortalFrameTester()
+                    .init((LevelAccessor) level, pos, CustomPortalHelper.getAxisFrom(state), block);
+            if (portalFrameTester.isAlreadyLitPortalFrame()) {
+                return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+            }
         }
+
         return Blocks.AIR.defaultBlockState();
     }
 
@@ -140,7 +130,7 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Entity entity) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, pos);
         }
@@ -168,7 +158,7 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public @Nullable DimensionTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
+    public @Nullable TeleportTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
         return CustomTeleporter.createTeleportTarget(world, entity, getPortalBase(world, pos), pos);
     }
 

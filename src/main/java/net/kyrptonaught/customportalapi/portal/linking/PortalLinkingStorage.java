@@ -1,65 +1,53 @@
 package net.kyrptonaught.customportalapi.portal.linking;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PortalLinkingStorage extends SavedData {
 
-    private final ConcurrentHashMap<ResourceLocation, ConcurrentHashMap<BlockPos, DimensionalBlockPos>> portalLinks =
-        new ConcurrentHashMap<>();
+    public static final Codec<PortalLinkingStorage> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    DimensionLink.CODEC.listOf().fieldOf("portalLinks").forGetter(PortalLinkingStorage::getPortalLinks)
+            ).apply(instance, PortalLinkingStorage::new)
+    );
+
+    public static final SavedDataType<PortalLinkingStorage> TYPE =  new SavedDataType<>(
+            "customportalapi_portal_links",
+            PortalLinkingStorage::new,
+            CODEC
+    );
+
+    private final List<DimensionLink> portalLinks = new ArrayList<>();
 
     public PortalLinkingStorage() {
-        super();
     }
 
-    public static SavedData.Factory<PortalLinkingStorage> factory() {
-        return new SavedData.Factory<>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt, DataFixTypes.LEVEL);
+    public PortalLinkingStorage(List<DimensionLink> portalLinks) {
+        this.portalLinks.addAll(portalLinks);
     }
 
-    public static PortalLinkingStorage fromNbt(CompoundTag tag, HolderLookup.Provider provider) {
-        PortalLinkingStorage cman = new PortalLinkingStorage();
-        ListTag links = (ListTag) tag.get("portalLinks");
-
-        for (int i = 0; i < links.size(); i++) {
-            CompoundTag link = links.getCompound(i);
-            DimensionalBlockPos toTag = DimensionalBlockPos.fromTag(link.getCompound("to"));
-            cman.addLink(
-                BlockPos.of(link.getLong("fromPos")),
-                ResourceLocation.parse(link.getString("fromDimID")),
-                toTag.pos,
-                toTag.dimensionType
-            );
-        }
-        return cman;
+    public List<DimensionLink> getPortalLinks() {
+        return portalLinks;
     }
 
-    @Override
-    public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-        ListTag links = new ListTag();
-        portalLinks.keys().asIterator().forEachRemaining(dimKey -> portalLinks.get(dimKey).forEach((blockPos, dimensionalBlockPos) -> {
-            CompoundTag link = new CompoundTag();
-            link.putString("fromDimID", dimKey.toString());
-            link.putLong("fromPos", blockPos.asLong());
-            link.put("to", dimensionalBlockPos.toTag(new CompoundTag()));
-            links.add(link);
-        }));
-        tag.put("portalLinks", links);
-        return tag;
-    }
-
+    @Nullable
     public DimensionalBlockPos getDestination(BlockPos portalFramePos, ResourceKey<Level> dimID) {
-        if (portalLinks.containsKey(dimID.location()))
-            return portalLinks.get(dimID.location()).get(portalFramePos);
+        for (DimensionLink link : portalLinks) {
+            if (link.fromDimension().equals(dimID.location()) && link.fromPos().equals(portalFramePos)) {
+                return link.toPos();
+            }
+        }
+
         return null;
     }
 
@@ -69,9 +57,17 @@ public class PortalLinkingStorage extends SavedData {
     }
 
     private void addLink(BlockPos portalFramePos, ResourceLocation dimID, BlockPos destPortalFramePos, ResourceLocation destDimID) {
-        if (!portalLinks.containsKey(dimID))
-            portalLinks.put(dimID, new ConcurrentHashMap<>());
-        portalLinks.get(dimID).put(portalFramePos, new DimensionalBlockPos(destDimID, destPortalFramePos));
+        boolean found = false;
+        for (DimensionLink link : portalLinks) {
+            if (link.fromDimension().equals(dimID) && link.fromPos().equals(portalFramePos)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            portalLinks.add(new DimensionLink(dimID, portalFramePos, new DimensionalBlockPos(destDimID, destPortalFramePos)));
+        }
     }
 
     private void addLink(BlockPos portalFramePos, ResourceKey<Level> dimID, BlockPos destPortalFramePos, ResourceKey<Level> destDimID) {

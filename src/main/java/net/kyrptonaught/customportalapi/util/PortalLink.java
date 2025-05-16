@@ -1,12 +1,5 @@
 package net.kyrptonaught.customportalapi.util;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
@@ -14,6 +7,12 @@ import net.kyrptonaught.customportalapi.event.CPAEvent;
 import net.kyrptonaught.customportalapi.event.CPASoundEventData;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class PortalLink {
 

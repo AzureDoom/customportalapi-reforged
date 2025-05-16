@@ -1,5 +1,13 @@
 package net.kyrptonaught.customportalapi.api;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.event.CPASoundEventData;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
+import net.kyrptonaught.customportalapi.util.PortalLink;
+import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -11,15 +19,6 @@ import net.minecraft.world.level.material.Fluid;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.event.CPASoundEventData;
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.util.ColorUtil;
-import net.kyrptonaught.customportalapi.util.PortalLink;
-import net.kyrptonaught.customportalapi.util.SHOULDTP;
 
 public class CustomPortalBuilder {
 
@@ -42,7 +41,7 @@ public class CustomPortalBuilder {
      * Register the portal when completed. This should be called last, only when you are finished configuring the portal
      */
     public void registerPortal() {
-        CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.get(portalLink.block), portalLink);
+        CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.getValue(portalLink.block), portalLink);
     }
 
     /**

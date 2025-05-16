@@ -1,6 +1,10 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
 import com.google.common.collect.Sets;
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
@@ -15,16 +19,11 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public class FlatPortalAreaHelper extends PortalFrameTester {
 
@@ -201,7 +200,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public DimensionTransition getTPTargetInPortal(
+    public TeleportTransition getTPTargetInPortal(
         ServerLevel world,
         FoundRectangle portalRect,
         Axis portalAxis,
@@ -216,11 +215,11 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         var x = Mth.lerp(prevOffset.x, portalRect.minCorner.getX(), portalRect.minCorner.getX() + xSize);
         var z = Mth.lerp(prevOffset.z, portalRect.minCorner.getZ(), portalRect.minCorner.getZ() + zSize);
 
-        DimensionTransition.PostDimensionTransition post = DimensionTransition.PLAY_PORTAL_SOUND.then(entityx -> {
+        TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entityx -> {
             entityx.placePortalTicket(portalRect.minCorner);
             link.executePostTPEvent(entityx);
         });
-        return new DimensionTransition(
+        return new TeleportTransition(
             world,
             new Vec3(x, portalRect.minCorner.getY() + 1D, z),
             entity.getDeltaMovement(),

@@ -1,5 +1,9 @@
 package net.kyrptonaught.customportalapi.portal;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,11 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 
 import java.util.Optional;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public class PortalPlacer {
 
@@ -70,8 +69,8 @@ public class PortalPlacer {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
 
-        int topY = Math.min(world.getMaxBuildHeight(), world.getMinBuildHeight() + world.getLogicalHeight()) - 5;
-        int bottomY = world.getMinBuildHeight() + 5;
+        int topY = Math.min(world.getMaxY(), world.getMinY() + world.getLogicalHeight()) - 5;
+        int bottomY = world.getMinY() + 5;
 
         if (world.dimension().location().equals(link.dimID)) {
             if (link.portalSearchYTop != null)

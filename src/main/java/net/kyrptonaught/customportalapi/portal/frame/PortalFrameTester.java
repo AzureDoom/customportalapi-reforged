@@ -1,5 +1,9 @@
 package net.kyrptonaught.customportalapi.portal.frame;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.BlockUtil;
 import net.minecraft.BlockUtil.FoundRectangle;
 import net.minecraft.core.BlockPos;
@@ -14,17 +18,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 
 public abstract class PortalFrameTester {
 
@@ -93,7 +92,7 @@ public abstract class PortalFrameTester {
 
     public abstract Vec3 getEntityOffsetInPortal(BlockUtil.FoundRectangle arg, Entity entity, Direction.Axis portalAxis);
 
-    public abstract DimensionTransition getTPTargetInPortal(
+    public abstract TeleportTransition getTPTargetInPortal(
         ServerLevel world,
         FoundRectangle portalRect,
         Axis portalAxis,
@@ -117,7 +116,7 @@ public abstract class PortalFrameTester {
             if (offset > 20)
                 return null;
             if (
-                (axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getMinBuildHeight()) ||
+                (axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getMinY()) ||
                     (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder()
                         .isWithinBounds(
                             blockPos.relative(axis, -offset)
