@@ -34,7 +34,7 @@ public class CustomPortalsMod {
 
     public static final String MOD_ID = "cpapireforged";
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
 
@@ -66,10 +66,6 @@ public class CustomPortalsMod {
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         NeoForge.EVENT_BUS.addListener(this::onRightClickItem);
-    }
-
-    public static void logError(String message) {
-        LOGGER.error(message);
     }
 
     public static CustomPortalBlock getDefaultPortalBlock() {

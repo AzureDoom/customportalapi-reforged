@@ -1,4 +1,4 @@
-package net.kkrptonaught.customportalapi;
+package net.krptonaught.customportalapi;
 
 import net.kyrptonaught.customportalapi.CustomPortalRegistrationEvent;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
@@ -28,7 +28,9 @@ public class TestMod {
 				.destination(ResourceLocation.withDefaultNamespace("the_end"))
 				.flatPortal()
 				.lightWithItem(Items.DIAMOND)
-				.tintColor(0, 255, 255);
+				.tintColor(0, 255, 255)
+				.preTeleportEvent(entity -> entity.getWeaponItem() != null && !entity.getWeaponItem().is(Items.NETHERITE_BLOCK))
+				.postTeleportEvent(entity -> CustomPortalsMod.LOGGER.info("Teleported entity: {}", entity.getName().getString()));
 
 		event.register(builder);
 	}

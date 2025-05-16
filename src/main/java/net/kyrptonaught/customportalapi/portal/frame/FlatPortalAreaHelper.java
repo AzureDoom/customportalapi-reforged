@@ -217,7 +217,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
         TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entityx -> {
             entityx.placePortalTicket(portalRect.minCorner);
-            link.executePostTPEvent(entityx);
+            link.executePostTeleportEvent(entityx);
         });
         return new TeleportTransition(
             world,

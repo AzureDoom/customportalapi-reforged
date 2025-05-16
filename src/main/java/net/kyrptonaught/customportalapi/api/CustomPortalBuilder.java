@@ -4,9 +4,7 @@ import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
-import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -77,7 +75,7 @@ public class CustomPortalBuilder {
      * Specify the color in RGB to be used to tint the portal block.
      */
     public CustomPortalBuilder tintColor(int r, int g, int b) {
-        portalLink.color = ColorUtil.getColorFromRGB(r, g, b);
+        portalLink.color = ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
         return this;
     }
 
@@ -177,11 +175,11 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register an event to be called immediately before the specified entity is teleported. The teleportation can be
-     * cancelled by returning SHOULDTP.CANCEL_TP
+     * Register an event to be called immediately before the specified entity is teleported.
+     * Returning true will allow the teleportation to continue, while returning false will cancel it.
      */
-    public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
-        portalLink.getBeforeTPEvent().register(event);
+    public CustomPortalBuilder preTeleportEvent(Function<Entity, Boolean> event) {
+        portalLink.setPreTeleportEvent(event);
         return this;
     }
 
@@ -189,8 +187,8 @@ public class CustomPortalBuilder {
     /**
      * Register an event to be called after the specified entity is teleported.
      */
-    public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {
-        portalLink.setPostTPEvent(event);
+    public CustomPortalBuilder postTeleportEvent(Consumer<Entity> event) {
+        portalLink.setPostTeleportEvent(event);
         return this;
     }
 }

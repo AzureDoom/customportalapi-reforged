@@ -190,7 +190,7 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
 
         TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entityx -> {
             entityx.placePortalTicket(portalRect.minCorner);
-            link.executePostTPEvent(entityx);
+            link.executePostTeleportEvent(entityx);
         });
         return new TeleportTransition(world, new Vec3(x, y, z), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot(), post);
     }

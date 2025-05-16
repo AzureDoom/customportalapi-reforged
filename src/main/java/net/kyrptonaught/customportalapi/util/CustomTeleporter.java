@@ -31,7 +31,7 @@ public class CustomTeleporter {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
         if (link == null)
             return null;
-        if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
+        if (!link.getPreTeleportEvent().apply(entity))
             return null;
         ResourceKey<Level> destKey = world.dimension() == CustomPortalsMod.dims.get(
             link.targetDimensionLocation
@@ -126,7 +126,7 @@ public class CustomTeleporter {
     }
 
     protected static TeleportTransition idkWhereToPutYou(ServerLevel world, Entity entity, BlockPos pos) {
-        CustomPortalsMod.logError("Unable to find tp location, forced to place on top of world");
+        CustomPortalsMod.LOGGER.error("Unable to find tp location, forced to place on top of world");
         BlockPos destinationPos = world.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, pos);
         return new TeleportTransition(
             world,
