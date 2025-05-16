@@ -50,10 +50,10 @@ public class CustomTeleporter {
         Entity entity,
         BlockPos enteredPortalPos,
         Block frameBlock,
-        PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory
+        PortalFrameTester portalFrameTesterFactory
     ) {
         Direction.Axis portalAxis = CustomPortalHelper.getAxisFrom(entity.level().getBlockState(enteredPortalPos));
-        BlockUtil.FoundRectangle fromPortalRectangle = portalFrameTesterFactory.createInstanceOfPortalFrameTester()
+        BlockUtil.FoundRectangle fromPortalRectangle = portalFrameTesterFactory
             .init(entity.level(), enteredPortalPos, portalAxis, frameBlock)
             .getRectangle();
 
@@ -63,7 +63,7 @@ public class CustomTeleporter {
         );
 
         if (destinationPos != null && destinationPos.dimension().equals(destinationWorld.dimension().location())) {
-            PortalFrameTester portalFrameTester = portalFrameTesterFactory.createInstanceOfPortalFrameTester()
+            PortalFrameTester portalFrameTester = portalFrameTesterFactory
                 .init(destinationWorld, destinationPos.pos(), portalAxis, frameBlock);
             if (portalFrameTester.isValidFrame()) {
                 if (!portalFrameTester.isAlreadyLitPortalFrame()) {
@@ -105,7 +105,7 @@ public class CustomTeleporter {
         Optional<BlockUtil.FoundRectangle> portal = PortalPlacer.createDestinationPortal(destination, blockPos3, frameBlock, axis);
         if (portal.isPresent()) {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
+            PortalFrameTester portalFrameTester = link.getFrameTester();
 
             CustomPortalsMod.portalLinkingStorage.createLink(
                 portalFramePos.minCorner,

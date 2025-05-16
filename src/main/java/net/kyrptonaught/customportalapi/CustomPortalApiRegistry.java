@@ -14,8 +14,6 @@ public class CustomPortalApiRegistry {
 
     protected static final ConcurrentHashMap<Block, PortalLink> portals = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<ResourceLocation, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new ConcurrentHashMap<>();
-
     private CustomPortalApiRegistry() {}
 
     public static PortalLink getPortalLinkFromBase(Block baseBlock) {
@@ -32,17 +30,6 @@ public class CustomPortalApiRegistry {
 
     public static Collection<PortalLink> getAllPortalLinks() {
         return portals.values();
-    }
-
-    public static void registerPortalFrameTester(
-        ResourceLocation frameTesterID,
-        PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester
-    ) {
-        PortalFrameTesters.put(frameTesterID, createPortalFrameTester);
-    }
-
-    public static PortalFrameTester.PortalFrameTesterFactory getPortalFrameTester(ResourceLocation frameTesterID) {
-        return PortalFrameTesters.getOrDefault(frameTesterID, null);
     }
 
     public static void addPortal(Block frameBlock, PortalLink link) {

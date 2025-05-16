@@ -2,8 +2,9 @@ package net.kyrptonaught.customportalapi.api;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.frame.FlatPortalFrameTester;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -162,14 +163,14 @@ public class CustomPortalBuilder {
      * Specify that this is a flat portal (end portal style).
      */
     public CustomPortalBuilder flatPortal() {
-        portalLink.portalFrameTester = CustomPortalsMod.FLATPORTAL_FRAMETESTER;
+        portalLink.portalFrameTester = new FlatPortalFrameTester();
         return this;
     }
 
     /**
      * Specify a custom portal frame tester to be used.
      */
-    public CustomPortalBuilder customFrameTester(ResourceLocation frameTester) {
+    public CustomPortalBuilder customFrameTester(PortalFrameTester frameTester) {
         portalLink.portalFrameTester = frameTester;
         return this;
     }

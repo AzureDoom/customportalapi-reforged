@@ -1,10 +1,10 @@
 package net.kyrptonaught.customportalapi.util;
 
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalFrameTester;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +24,7 @@ public class PortalLink {
     public int strictWidth, strictHeight;
     public Integer portalSearchYBottom, portalSearchYTop;
     public Integer returnPortalSearchYBottom, returnPortalSearchYTop;
-    public ResourceLocation portalFrameTester = CustomPortalsMod.VANILLAPORTAL_FRAMETESTER;
+    public PortalFrameTester portalFrameTester = new VanillaPortalFrameTester();
     private Consumer<Entity> postTeleportEvent = entity -> {};
     private Function<Entity, Boolean> preTeleportEvent = entity -> true;
 
@@ -63,7 +63,7 @@ public class PortalLink {
         postTeleportEvent.accept(entity);
     }
 
-    public PortalFrameTester.PortalFrameTesterFactory getFrameTester() {
-        return CustomPortalApiRegistry.getPortalFrameTester(portalFrameTester);
+    public PortalFrameTester getFrameTester() {
+        return portalFrameTester;
     }
 }

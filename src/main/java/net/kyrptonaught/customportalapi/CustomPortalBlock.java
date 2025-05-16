@@ -70,7 +70,6 @@ public class CustomPortalBlock extends Block implements Portal {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester()
-                    .createInstanceOfPortalFrameTester()
                     .init((LevelAccessor) level, pos, CustomPortalHelper.getAxisFrom(state), block);
             if (portalFrameTester.isAlreadyLitPortalFrame()) {
                 return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);

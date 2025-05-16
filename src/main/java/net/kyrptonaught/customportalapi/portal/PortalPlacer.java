@@ -43,7 +43,6 @@ public class PortalPlacer {
 
     private static boolean createPortal(PortalLink link, Level world, BlockPos pos, Block foundationBlock) {
         Optional<PortalFrameTester> optional = link.getFrameTester()
-            .createInstanceOfPortalFrameTester()
             .getNewPortal(
                 world,
                 pos,
@@ -67,7 +66,7 @@ public class PortalPlacer {
     ) {
         WorldBorder worldBorder = world.getWorldBorder();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-        PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
+        PortalFrameTester portalFrameTester = link.getFrameTester();
 
         int topY = Math.min(world.getMaxY(), world.getMinY() + world.getLogicalHeight()) - 5;
         int bottomY = world.getMinY() + 5;

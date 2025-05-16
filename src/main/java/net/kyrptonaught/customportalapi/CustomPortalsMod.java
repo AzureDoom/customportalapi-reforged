@@ -3,8 +3,6 @@ package net.kyrptonaught.customportalapi;
 import com.mojang.logging.LogUtils;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
-import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
-import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -53,18 +51,12 @@ public class CustomPortalsMod {
 
     public static HashMap<ResourceLocation, ResourceKey<Level>> dims = new HashMap<>();
 
-    public static ResourceLocation VANILLAPORTAL_FRAMETESTER = ResourceLocation.fromNamespaceAndPath(MOD_ID, "vanillanether");
-
-    public static ResourceLocation FLATPORTAL_FRAMETESTER = ResourceLocation.fromNamespaceAndPath(MOD_ID, "flat");
-
     public static PortalLinkingStorage portalLinkingStorage;
 
     public CustomPortalsMod(IEventBus bus) {
         BLOCKS.register(bus);
         bus.addListener(this::onCommonStartUp);
         NeoForge.EVENT_BUS.addListener(this::onServerStart);
-        CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
-        CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         NeoForge.EVENT_BUS.addListener(this::onRightClickItem);
     }
 
