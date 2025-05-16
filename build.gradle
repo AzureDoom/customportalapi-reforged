@@ -19,8 +19,17 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+sourceSets {
+    main
+    test {
+        compileClasspath += main.output
+    }
+}
+
+
 neoForge {
     version = "${neo_version}"
+    addModdingDependenciesTo sourceSets.test
 
     parchment {
         minecraftVersion = "${parchment_minecraft}"
@@ -45,6 +54,7 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.test)
         }
     }
 }

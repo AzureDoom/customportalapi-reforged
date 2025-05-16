@@ -17,33 +17,33 @@ public class PortalLinkingStorage extends SavedData {
 
     public static final Codec<PortalLinkingStorage> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    DimensionLink.CODEC.listOf().fieldOf("portalLinks").forGetter(PortalLinkingStorage::getPortalLinks)
+                    DimensionLink.CODEC.listOf().fieldOf("dimensionLinks").forGetter(PortalLinkingStorage::getDimensionLinks)
             ).apply(instance, PortalLinkingStorage::new)
     );
 
     public static final SavedDataType<PortalLinkingStorage> TYPE =  new SavedDataType<>(
-            "customportalapi_portal_links",
+            "customportalapi_dimension_links",
             PortalLinkingStorage::new,
             CODEC
     );
 
-    private final List<DimensionLink> portalLinks = new ArrayList<>();
+    private final List<DimensionLink> dimensionLinks = new ArrayList<>();
 
     public PortalLinkingStorage() {
     }
 
     public PortalLinkingStorage(List<DimensionLink> portalLinks) {
-        this.portalLinks.addAll(portalLinks);
+        this.dimensionLinks.addAll(portalLinks);
     }
 
-    public List<DimensionLink> getPortalLinks() {
-        return portalLinks;
+    public List<DimensionLink> getDimensionLinks() {
+        return dimensionLinks;
     }
 
     @Nullable
-    public DimensionalBlockPos getDestination(BlockPos portalFramePos, ResourceKey<Level> dimID) {
-        for (DimensionLink link : portalLinks) {
-            if (link.fromDimension().equals(dimID.location()) && link.fromPos().equals(portalFramePos)) {
+    public DimensionalBlockPos getDestination(BlockPos portalFramePos, ResourceKey<Level> dim) {
+        for (DimensionLink link : dimensionLinks) {
+            if (link.fromPos().dimension().equals(dim.location()) && link.fromPos().pos().equals(portalFramePos)) {
                 return link.toPos();
             }
         }
@@ -51,27 +51,27 @@ public class PortalLinkingStorage extends SavedData {
         return null;
     }
 
-    public void createLink(BlockPos portalFramePos, ResourceKey<Level> dimID, BlockPos destPortalFramePos, ResourceKey<Level> destDimID) {
-        addLink(portalFramePos, dimID, destPortalFramePos, destDimID);
-        addLink(destPortalFramePos, destDimID, portalFramePos, dimID);
+    public void createLink(BlockPos portalFramePos, ResourceKey<Level> fromDim, BlockPos destPortalFramePos, ResourceKey<Level> destDim) {
+        addLink(portalFramePos, fromDim, destPortalFramePos, destDim);
+        addLink(destPortalFramePos, destDim, portalFramePos, fromDim);
     }
 
-    private void addLink(BlockPos portalFramePos, ResourceLocation dimID, BlockPos destPortalFramePos, ResourceLocation destDimID) {
+    private void addLink(BlockPos portalFramePos, ResourceLocation fromDim, BlockPos destPortalFramePos, ResourceLocation destDim) {
         boolean found = false;
-        for (DimensionLink link : portalLinks) {
-            if (link.fromDimension().equals(dimID) && link.fromPos().equals(portalFramePos)) {
+        for (DimensionLink link : dimensionLinks) {
+            if (link.fromPos().dimension().equals(fromDim) && link.fromPos().pos().equals(portalFramePos)) {
                 found = true;
                 break;
             }
         }
 
         if (!found) {
-            portalLinks.add(new DimensionLink(dimID, portalFramePos, new DimensionalBlockPos(destDimID, destPortalFramePos)));
+            dimensionLinks.add(new DimensionLink(new DimensionalBlockPos(fromDim, portalFramePos), new DimensionalBlockPos(destDim, destPortalFramePos)));
         }
     }
 
-    private void addLink(BlockPos portalFramePos, ResourceKey<Level> dimID, BlockPos destPortalFramePos, ResourceKey<Level> destDimID) {
-        addLink(portalFramePos, dimID.location(), destPortalFramePos, destDimID.location());
+    private void addLink(BlockPos portalFramePos, ResourceKey<Level> fromDim, BlockPos destPortalFramePos, ResourceKey<Level> destDim) {
+        addLink(portalFramePos, fromDim.location(), destPortalFramePos, destDim.location());
     }
 
     @Override

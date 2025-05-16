@@ -62,7 +62,6 @@ public class CustomPortalsMod {
     public CustomPortalsMod(IEventBus bus) {
         BLOCKS.register(bus);
         bus.addListener(this::onCommonStartUp);
-        bus.addListener(this::createPortals);
         NeoForge.EVENT_BUS.addListener(this::onServerStart);
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
@@ -79,20 +78,6 @@ public class CustomPortalsMod {
 
     public void onCommonStartUp(FMLCommonSetupEvent event) {
         ModLoader.postEvent(new CustomPortalRegistrationEvent());
-    }
-
-    public void createPortals(CustomPortalRegistrationEvent event) {
-//        CustomPortalBuilder builder =
-//            CustomPortalBuilder.beginPortal()
-//                .frameBlock(Blocks.GLOWSTONE)
-//                .destDimID(ResourceLocation.withDefaultNamespace("the_nether"))
-//                .lightWithWater()
-//                .tintColor(
-//                    255,
-//                    0,
-//                    255
-//                );
-//        event.register(builder);
     }
 
     private void onServerStart(ServerStartedEvent event) {

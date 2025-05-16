@@ -62,9 +62,9 @@ public class CustomTeleporter {
             entity.level().dimension()
         );
 
-        if (destinationPos != null && destinationPos.dimensionType.equals(destinationWorld.dimension().location())) {
+        if (destinationPos != null && destinationPos.dimension().equals(destinationWorld.dimension().location())) {
             PortalFrameTester portalFrameTester = portalFrameTesterFactory.createInstanceOfPortalFrameTester()
-                .init(destinationWorld, destinationPos.pos, portalAxis, frameBlock);
+                .init(destinationWorld, destinationPos.pos(), portalAxis, frameBlock);
             if (portalFrameTester.isValidFrame()) {
                 if (!portalFrameTester.isAlreadyLitPortalFrame()) {
                     portalFrameTester.lightPortal(frameBlock);
