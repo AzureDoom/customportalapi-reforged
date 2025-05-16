@@ -78,14 +78,6 @@ public class PortalLink {
         return beforeTPEvent;
     }
 
-    public CPAEvent<Player, CPASoundEventData> getInPortalAmbienceEvent() {
-        return inPortalAmbienceEvent;
-    }
-
-    public CPAEvent<Player, CPASoundEventData> getPostTpPortalAmbienceEvent() {
-        return postTpPortalAmbienceEvent;
-    }
-
     public void setPostTPEvent(Consumer<Entity> event) {
         postTPEvent = event;
     }

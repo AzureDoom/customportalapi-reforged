@@ -72,17 +72,13 @@ public class PortalIgnitionSource {
 
     public boolean isWater() {
         return Optional.of(BuiltInRegistries.FLUID.get(ignitionSourceID))
-            .filter(
-                a -> a.get().is(FluidTags.WATER)
-            )
-            .isPresent();
+                .filter(fluid -> fluid.isPresent() && fluid.orElseThrow().is(FluidTags.WATER))
+                .isPresent();
     }
 
     public boolean isLava() {
         return Optional.of(BuiltInRegistries.FLUID.get(ignitionSourceID))
-            .filter(
-                a -> a.get().is(FluidTags.LAVA)
-            )
-            .isPresent();
+                .filter(fluid -> fluid.isPresent() && fluid.orElseThrow().is(FluidTags.LAVA))
+                .isPresent();
     }
 }

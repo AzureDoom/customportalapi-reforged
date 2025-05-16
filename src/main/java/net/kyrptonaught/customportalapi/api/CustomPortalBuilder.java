@@ -206,24 +206,6 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register a sound to be played when the player in standing in the portal CPASoundEventData is just a stub for
-     * PositionSoundAmbience as it does not exist serverside
-     */
-    public CustomPortalBuilder registerInPortalAmbienceSound(Function<Player, CPASoundEventData> event) {
-        portalLink.getInPortalAmbienceEvent().register(event);
-        return this;
-    }
-
-    /**
-     * Register a sound to be played when the player teleports CPASoundEventData is just a stub for
-     * PositionSoundAmbience as it does not exist serverside
-     */
-    public CustomPortalBuilder registerPostTPPortalAmbience(Function<Player, CPASoundEventData> event) {
-        portalLink.getPostTpPortalAmbienceEvent().register(event);
-        return this;
-    }
-
-    /**
      * Register an event to be called after the specified entity is teleported.
      */
     public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {

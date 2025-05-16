@@ -4,6 +4,7 @@ import net.kyrptonaught.customportalapi.CustomPortalRegistrationEvent;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,6 +19,15 @@ public class TestMod {
 						.destDimID(ResourceLocation.withDefaultNamespace("the_nether"))
 						.lightWithWater()
 						.tintColor(255, 0, 255);
+
+		event.register(builder);
+
+		builder = CustomPortalBuilder.beginPortal()
+				.frameBlock(Blocks.DIAMOND_BLOCK)
+				.destDimID(ResourceLocation.withDefaultNamespace("the_end"))
+				.flatPortal()
+				.lightWithItem(Items.DIAMOND)
+				.tintColor(0, 255, 255);
 
 		event.register(builder);
 	}
