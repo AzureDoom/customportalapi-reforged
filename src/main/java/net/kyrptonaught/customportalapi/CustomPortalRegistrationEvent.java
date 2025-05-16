@@ -10,6 +10,6 @@ public class CustomPortalRegistrationEvent extends Event implements IModBusEvent
      * @param builder The {@link CustomPortalBuilder} to register
      */
     public void register(CustomPortalBuilder builder) {
-        builder.registerPortal();
+        builder.build();
     }
 }

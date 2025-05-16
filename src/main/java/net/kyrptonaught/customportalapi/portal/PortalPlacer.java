@@ -52,7 +52,7 @@ public class PortalPlacer {
             );
         // is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
-            if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight))
+            if (optional.get().isRequestedSize(link.strictWidth, link.strictHeight))
                 optional.get().lightPortal(foundationBlock);
             return true;
         }
@@ -72,7 +72,7 @@ public class PortalPlacer {
         int topY = Math.min(world.getMaxY(), world.getMinY() + world.getLogicalHeight()) - 5;
         int bottomY = world.getMinY() + 5;
 
-        if (world.dimension().location().equals(link.dimID)) {
+        if (world.dimension().location().equals(link.targetDimensionLocation)) {
             if (link.portalSearchYTop != null)
                 topY = link.portalSearchYTop;
             if (link.portalSearchYBottom != null)

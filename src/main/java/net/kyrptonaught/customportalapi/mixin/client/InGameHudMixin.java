@@ -58,7 +58,7 @@ public class InGameHudMixin {
             return this.minecraft.getBlockRenderer()
                 .getBlockModelShaper()
                 .getParticleIcon(
-                    CustomPortalsMod.portalBlock.get().defaultBlockState()
+                    CustomPortalsMod.CUSTOM_PORTAL_BLOCK.get().defaultBlockState()
                 );
         }
         return this.minecraft.getBlockRenderer()
@@ -85,7 +85,7 @@ public class InGameHudMixin {
         if (portalBlock instanceof CustomPortalBlock customportalblock) {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(customportalblock.getPortalBase(player.clientLevel, portalPos));
             if (link != null) {
-                lastColor = link.colorID;
+                lastColor = link.color;
                 return;
             }
         }

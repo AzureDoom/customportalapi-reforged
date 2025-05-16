@@ -26,17 +26,17 @@ public class CustomPortalsModClient {
                 var block = CustomPortalHelper.getPortalBase(((ChunkRendererRegionAccessor) world).getLevel(), pos);
                 var link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
                 if (link != null)
-                    return link.colorID;
+                    return link.color;
             }
             return 1908001;
-        }, CustomPortalsMod.portalBlock.get());
+        }, CustomPortalsMod.CUSTOM_PORTAL_BLOCK.get());
     }
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(
             () -> ItemBlockRenderTypes.setRenderLayer(
-                CustomPortalsMod.portalBlock.get(),
+                CustomPortalsMod.CUSTOM_PORTAL_BLOCK.get(),
                 RenderType.translucent()
             )
         );

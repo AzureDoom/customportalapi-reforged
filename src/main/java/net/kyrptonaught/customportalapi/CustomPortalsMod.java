@@ -38,7 +38,7 @@ public class CustomPortalsMod {
 
     public static DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
 
-    public static final Supplier<CustomPortalBlock> portalBlock = BLOCKS.registerBlock(
+    public static final Supplier<CustomPortalBlock> CUSTOM_PORTAL_BLOCK = BLOCKS.registerBlock(
         "custom_portal_block",
         (properties) -> new CustomPortalBlock(properties
                 .noCollission()
@@ -73,7 +73,7 @@ public class CustomPortalsMod {
     }
 
     public static CustomPortalBlock getDefaultPortalBlock() {
-        return portalBlock.get();
+        return CUSTOM_PORTAL_BLOCK.get();
     }
 
     public void onCommonStartUp(FMLCommonSetupEvent event) {
@@ -105,7 +105,7 @@ public class CustomPortalsMod {
                         !PortalPlacer.attemptPortalLight(
                             world,
                             blockHit.getBlockPos().relative(blockHit.getDirection()),
-                            PortalIgnitionSource.ItemUseSource(item)
+                            PortalIgnitionSource.fromItem(item)
                         )
                     )
                         event.setCanceled(true);

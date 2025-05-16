@@ -40,7 +40,7 @@ public abstract class PortalFrameTester {
         for (Block block : foundations) {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
             if (link != null) {
-                ignitionSource = link.portalIgnitionSource;
+                ignitionSource = link.ignitionSource;
                 break;
             }
         }

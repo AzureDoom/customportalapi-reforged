@@ -27,7 +27,7 @@ public abstract class FluidBlockPlacedMixin {
             PortalPlacer.attemptPortalLight(
                 world,
                 pos,
-                PortalIgnitionSource.FluidSource(state.getFluidState().getType())
+                PortalIgnitionSource.fromFluid(state.getFluidState().getType())
             );
     }
 }

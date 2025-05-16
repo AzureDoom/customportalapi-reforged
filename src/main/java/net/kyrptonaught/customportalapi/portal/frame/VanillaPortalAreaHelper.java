@@ -198,7 +198,7 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     public void lightPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
         BlockState blockState = CustomPortalHelper.blockWithAxis(
-            link != null ? link.getPortalBlock().defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
+            link != null ? link.portalBlock.defaultBlockState() : CustomPortalsMod.getDefaultPortalBlock().defaultBlockState(),
             axis
         );
         BlockPos.betweenClosed(

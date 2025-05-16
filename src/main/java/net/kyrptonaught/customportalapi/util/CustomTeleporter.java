@@ -34,8 +34,8 @@ public class CustomTeleporter {
         if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
             return null;
         ResourceKey<Level> destKey = world.dimension() == CustomPortalsMod.dims.get(
-            link.dimID
-        ) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
+            link.targetDimensionLocation
+        ) ? CustomPortalsMod.dims.get(link.returnDimensionLocation) : CustomPortalsMod.dims.get(link.targetDimensionLocation);
         ServerLevel destination = ((ServerLevel) world).getServer().getLevel(destKey);
         if (destination == null)
             return null;

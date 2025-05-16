@@ -3,7 +3,6 @@ package net.kyrptonaught.customportalapi.api;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.event.CPASoundEventData;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -11,76 +10,66 @@ import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class CustomPortalBuilder {
-
     private final PortalLink portalLink;
 
-    private CustomPortalBuilder() {
+    public CustomPortalBuilder() {
         portalLink = new PortalLink();
     }
 
     /**
-     * Begin the creation of a new Portal
-     *
-     * @return an instance of CustomPortalBuilder to begin configuring the portal
+     * Register the portal when completed.
+     * This should be called last, only when you are finished configuring the portal.
      */
-    public static CustomPortalBuilder beginPortal() {
-        return new CustomPortalBuilder();
+    public void build() {
+        CustomPortalApiRegistry.addPortal(portalLink.frameBlock, portalLink);
     }
 
     /**
-     * Register the portal when completed. This should be called last, only when you are finished configuring the portal
-     */
-    public void registerPortal() {
-        CustomPortalApiRegistry.addPortal(BuiltInRegistries.BLOCK.getValue(portalLink.block), portalLink);
-    }
-
-    /**
-     * Specify the Block ResourceLocation to be used as the Frame
+     * Specify a frame block as a {@link ResourceLocation}.
      *
-     * @param blockID Block identifier of the portal's frame block
+     * @param blockLocation ResourceLocation of the Block to be used as the portal's frame block
      */
-    public CustomPortalBuilder frameBlock(ResourceLocation blockID) {
-        portalLink.block = blockID;
+    public CustomPortalBuilder frame(ResourceLocation blockLocation) {
+        portalLink.frameBlock = BuiltInRegistries.BLOCK.getValue(blockLocation);
         return this;
     }
 
     /**
-     * Specify the Block to be used as the Frame
+     * Specify a frame block as a {@link Block}.
      *
-     * @param block The Block to be used as the portal's frame block
+     * @param block Block to be used as the portal's frame block
      */
-    public CustomPortalBuilder frameBlock(Block block) {
-        portalLink.block = BuiltInRegistries.BLOCK.getKey(block);
+    public CustomPortalBuilder frame(Block block) {
+        portalLink.frameBlock = block;
         return this;
     }
 
     /**
-     * Specify the destination for the portal
+     * Specify the destination dimension of the portal.
      *
-     * @param dimID ResourceLocation of the Dimension the portal will travel to
+     * @param dimensionLocation ResourceLocation of the dimension the portal will teleport to
      */
-    public CustomPortalBuilder destDimID(ResourceLocation dimID) {
-        portalLink.dimID = dimID;
+    public CustomPortalBuilder destination(ResourceLocation dimensionLocation) {
+        portalLink.targetDimensionLocation = dimensionLocation;
         return this;
     }
 
     /**
-     * Specify the color to be used to tint the portal block.
+     * Specify the color to be used to tint the portal block. Accepts a single int value.
      *
-     * @param color Single Color int value used for tinting. See {@link net.minecraft.util.ColorRGBA}
+     * @param color Color to be used to tint the portal block
      */
     public CustomPortalBuilder tintColor(int color) {
-        portalLink.colorID = color;
+        portalLink.color = color;
         return this;
     }
 
@@ -88,100 +77,91 @@ public class CustomPortalBuilder {
      * Specify the color in RGB to be used to tint the portal block.
      */
     public CustomPortalBuilder tintColor(int r, int g, int b) {
-        portalLink.colorID = ColorUtil.getColorFromRGB(r, g, b);
+        portalLink.color = ColorUtil.getColorFromRGB(r, g, b);
         return this;
     }
 
     /**
-     * This portal will be ignited by water
-     */
-    public CustomPortalBuilder lightWithWater() {
-        portalLink.portalIgnitionSource = PortalIgnitionSource.WATER;
-        return this;
-    }
-
-    /**
-     * This portal will be ignited by an item
+     * Set the ignition source to an item.
      *
      * @param item Item to be used to ignite the portal
      */
     public CustomPortalBuilder lightWithItem(Item item) {
-        portalLink.portalIgnitionSource = PortalIgnitionSource.ItemUseSource(item);
+        portalLink.ignitionSource = PortalIgnitionSource.fromItem(item);;
         return this;
     }
 
     /**
-     * This portal will be ignited by a fluid
+     * Set the ignition source to a fluid.
      *
      * @param fluid Fluid to be used to ignite the portal
      */
     public CustomPortalBuilder lightWithFluid(Fluid fluid) {
-        portalLink.portalIgnitionSource = PortalIgnitionSource.FluidSource(fluid);
+        portalLink.ignitionSource = PortalIgnitionSource.fromFluid(fluid);
         return this;
     }
 
     /**
-     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition
-     * yourself.
+     * Specify a custom ignition source to ignite the portal.
+     * You must manually trigger the ignition yourself.
      */
-    public CustomPortalBuilder customIgnitionSource(ResourceLocation customSourceID) {
-        portalLink.portalIgnitionSource = PortalIgnitionSource.CustomSource(customSourceID);
+    public CustomPortalBuilder customIgnitionSource(ResourceLocation customSourceLocation) {
+        portalLink.ignitionSource = PortalIgnitionSource.fromCustomSource(customSourceLocation);
         return this;
     }
 
     /**
-     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition
-     * yourself.
+     * Specify a custom ignition source to ignite the portal.
+     * You must manually trigger the ignition yourself.
      */
     public CustomPortalBuilder customIgnitionSource(PortalIgnitionSource ignitionSource) {
-        portalLink.portalIgnitionSource = ignitionSource;
+        portalLink.ignitionSource = ignitionSource;
         return this;
     }
 
     /**
-     * Specify the forced size of the portal Portal will only be ignitable for these exact dimensions
+     * Set specific dimensions for the portal.
      *
-     * @param width  Forced width of portal
-     * @param height Forced height of portal
+     * @param width  Width of portal
+     * @param height Height of portal
      */
-    public CustomPortalBuilder forcedSize(int width, int height) {
-        portalLink.forcedWidth = width;
-        portalLink.forcedHeight = height;
+    public CustomPortalBuilder withStrictDimensions(int width, int height) {
+        portalLink.strictWidth = width;
+        portalLink.strictHeight = height;
         return this;
     }
 
     /**
-     * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
+     * Specify a custom block to be used as the portal block.
      */
-    public CustomPortalBuilder customPortalBlock(Supplier<CustomPortalBlock> portalBlock) {
-        portalLink.setPortalBlock(portalBlock);
+    public CustomPortalBuilder customPortalBlock(CustomPortalBlock portalBlock) {
+        portalLink.portalBlock = portalBlock;
         return this;
     }
 
     /**
-     * Specify the dimension this portal will return you to
+     * Specify the dimension this portal will return you to.
      *
-     * @param returnDimID              Identifer of the dimmension the portal will return you to when leaving
-     *                                 destination
-     * @param onlyIgnitableInReturnDim Should this portal only be ignitable in returnDimID
+     * @param returnDimensionLocation ResourceLocation of the dimension the portal will return you to
+     * @param onlyIgnitableInReturnDimension Whether the portal can only be ignited in the return dimension
      */
-    public CustomPortalBuilder returnDim(ResourceLocation returnDimID, boolean onlyIgnitableInReturnDim) {
-        portalLink.returnDimID = returnDimID;
-        portalLink.onlyIgnitableInReturnDim = onlyIgnitableInReturnDim;
+    public CustomPortalBuilder returnDimension(ResourceLocation returnDimensionLocation, boolean onlyIgnitableInReturnDimension) {
+        portalLink.returnDimensionLocation = returnDimensionLocation;
+        portalLink.onlyIgnitableInReturnDimension = onlyIgnitableInReturnDimension;
         return this;
     }
 
     /**
-     * Specify that this portal can only be ignited in the Overworld Attempting to light it in other dimensions will
-     * fail
+     * Specify that this portal can only be ignited in the overworld.
+     * Attempting to light it in other dimensions will fail.
      */
     public CustomPortalBuilder onlyLightInOverworld() {
-        portalLink.onlyIgnitableInReturnDim = true;
+        portalLink.onlyIgnitableInReturnDimension = true;
         return this;
     }
 
     /**
-     * Specify that this is a flat portal (end portal style)
+     * Specify that this is a flat portal (end portal style).
      */
     public CustomPortalBuilder flatPortal() {
         portalLink.portalFrameTester = CustomPortalsMod.FLATPORTAL_FRAMETESTER;
@@ -204,6 +184,7 @@ public class CustomPortalBuilder {
         portalLink.getBeforeTPEvent().register(event);
         return this;
     }
+
 
     /**
      * Register an event to be called after the specified entity is teleported.

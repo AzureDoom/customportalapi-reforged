@@ -22,7 +22,7 @@ public class PortalIgnitionSource {
         BuiltInRegistries.BLOCK.getKey(Blocks.FIRE)
     );
 
-    public static final PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
+    public static final PortalIgnitionSource WATER = fromFluid(Fluids.WATER);
 
     public enum SourceType {
         USEITEM,
@@ -49,16 +49,16 @@ public class PortalIgnitionSource {
         return this;
     }
 
-    public static PortalIgnitionSource ItemUseSource(Item item) {
+    public static PortalIgnitionSource fromItem(Item item) {
         USEITEMS.add(item);
         return new PortalIgnitionSource(SourceType.USEITEM, BuiltInRegistries.ITEM.getKey(item));
     }
 
-    public static PortalIgnitionSource FluidSource(Fluid fluid) {
+    public static PortalIgnitionSource fromFluid(Fluid fluid) {
         return new PortalIgnitionSource(SourceType.FLUID, BuiltInRegistries.FLUID.getKey(fluid));
     }
 
-    public static PortalIgnitionSource CustomSource(ResourceLocation ignitionSourceID) {
+    public static PortalIgnitionSource fromCustomSource(ResourceLocation ignitionSourceID) {
         return new PortalIgnitionSource(SourceType.CUSTOM, ignitionSourceID);
     }
 

@@ -14,8 +14,7 @@ public class CustomPortalApiRegistry {
 
     protected static final ConcurrentHashMap<Block, PortalLink> portals = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<ResourceLocation, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters =
-        new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<ResourceLocation, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new ConcurrentHashMap<>();
 
     private CustomPortalApiRegistry() {}
 
@@ -49,13 +48,13 @@ public class CustomPortalApiRegistry {
     public static void addPortal(Block frameBlock, PortalLink link) {
         if (frameBlock == null)
             throw new RuntimeException("Frame block must not be null");
-        if (link.getPortalBlock() == null)
+        if (link.portalBlock == null)
             throw new RuntimeException("Portal block must not be null");
-        if (link.portalIgnitionSource == null)
+        if (link.ignitionSource == null)
             throw new RuntimeException("Portal ignition source must not be null");
-        if (link.dimID == null)
+        if (link.targetDimensionLocation == null)
             throw new RuntimeException("Dimension is null");
-        if (!CustomPortalsMod.dims.isEmpty() && !CustomPortalsMod.dims.containsKey(link.dimID))
+        if (!CustomPortalsMod.dims.isEmpty() && !CustomPortalsMod.dims.containsKey(link.targetDimensionLocation))
             throw new RuntimeException("Dimension not found");
         if (CustomPortalsMod.getDefaultPortalBlock() == null)
             throw new RuntimeException("Built-in CustomPortalBlock is null");
