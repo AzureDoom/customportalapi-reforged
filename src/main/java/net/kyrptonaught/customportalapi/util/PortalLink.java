@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,13 +109,11 @@ public class PortalLink {
         this.travelSoundPitch = travelSoundPitch;
     }
 
-    public TeleportTransition.PostTeleportTransition getTravelSound() {
-        return (entity) -> {
-            if (entity instanceof ServerPlayer player && travelSoundLocation != null) {
-                PacketDistributor.sendToPlayer(player,
-                        new PlayerSoundPayload(travelSoundLocation, travelSoundVolume.apply(entity), travelSoundPitch.apply(entity)));
-            }
-        };
+    public void playTravelSound(Entity entity) {
+        if (entity instanceof ServerPlayer player && travelSoundLocation != null) {
+            PacketDistributor.sendToPlayer(player,
+                    new PlayerSoundPayload(travelSoundLocation, travelSoundVolume.apply(entity), travelSoundPitch.apply(entity)));
+        }
     }
 
     public void setTriggerSound(ResourceLocation triggerSoundLocation, Function<Entity, Float> triggerSoundVolume, Function<Entity, Float> triggerSoundPitch) {
