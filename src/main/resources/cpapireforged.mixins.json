@@ -4,9 +4,9 @@
   "package": "net.kyrptonaught.customportalapi.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "portalLighters.AbstractFireMixin",
-    "portalLighters.FluidBlockPlacedMixin",
-    "portalLighters.PotionEntityMixin"
+    "portal_lighters.AbstractFireMixin",
+    "portal_lighters.FluidBlockPlacedMixin",
+    "portal_lighters.PotionEntityMixin"
   ],
   "client": [
     "client.ChunkRendererRegionAccessor",

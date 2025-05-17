@@ -29,9 +29,9 @@ public class PortalIgnitionSource {
 
     private static final HashSet<Item> USE_ITEMS = new HashSet<>();
 
-    public SourceType sourceType;
+    public final SourceType sourceType;
 
-    public ResourceLocation ignitionSourceID;
+    public final ResourceLocation ignitionSourceID;
 
     private PortalIgnitionSource(SourceType sourceType, ResourceLocation ignitionSourceID) {
         this.sourceType = sourceType;

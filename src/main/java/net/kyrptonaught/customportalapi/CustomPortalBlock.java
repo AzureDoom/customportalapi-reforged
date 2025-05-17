@@ -67,7 +67,7 @@ public class CustomPortalBlock extends Block implements Portal {
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         Block block = getPortalBase((Level) level, pos);
-        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+        PortalLink link = CustomPortalsMod.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester()
                     .init((LevelAccessor) level, pos, CustomPortalHelper.getAxisFrom(state), block);
@@ -157,12 +157,14 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public @Nullable TeleportTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
+    @Nullable
+    public TeleportTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
         return CustomTeleporter.createTeleportTarget(world, entity, getPortalBase(world, pos), pos);
     }
 
     @Override
-    public @NotNull Transition getLocalTransition() {
+    @NotNull
+    public Transition getLocalTransition() {
         return Transition.CONFUSION;
     }
 }

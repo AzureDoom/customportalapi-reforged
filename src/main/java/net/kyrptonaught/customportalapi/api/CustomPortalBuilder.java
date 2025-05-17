@@ -1,7 +1,7 @@
 package net.kyrptonaught.customportalapi.api;
 
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.FlatPortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
@@ -29,7 +29,7 @@ public class CustomPortalBuilder {
      * This should be called last, only when you are finished configuring the portal.
      */
     public void build() {
-        CustomPortalApiRegistry.addPortal(portalLink.frameBlock, portalLink);
+        CustomPortalsMod.addPortal(portalLink.getFrameBlock(), portalLink);
     }
 
     /**
@@ -38,7 +38,7 @@ public class CustomPortalBuilder {
      * @param blockLocation ResourceLocation of the Block to be used as the portal's frame block
      */
     public CustomPortalBuilder frame(ResourceLocation blockLocation) {
-        portalLink.frameBlock = BuiltInRegistries.BLOCK.getValue(blockLocation);
+        portalLink.setFrameBlock(BuiltInRegistries.BLOCK.getValue(blockLocation));
         return this;
     }
 
@@ -48,7 +48,7 @@ public class CustomPortalBuilder {
      * @param block Block to be used as the portal's frame block
      */
     public CustomPortalBuilder frame(Block block) {
-        portalLink.frameBlock = block;
+        portalLink.setFrameBlock(block);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class CustomPortalBuilder {
      * @param item Item to be used to ignite the portal
      */
     public CustomPortalBuilder lightWithItem(Item item) {
-        portalLink.ignitionSource = PortalIgnitionSource.fromItem(item);;
+        portalLink.ignitionSource = PortalIgnitionSource.fromItem(item);
         return this;
     }
 

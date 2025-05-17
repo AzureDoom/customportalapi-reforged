@@ -8,27 +8,39 @@ import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalFrameTester;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class PortalLink {
 
-    public Block frameBlock;
+    @Nullable
+    private Block frameBlock;
     public PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
     public CustomPortalBlock portalBlock = CustomPortalsMod.CUSTOM_PORTAL_BLOCK.get();
-    public ResourceLocation targetDimensionLocation;
+    public ResourceLocation targetDimensionLocation = ResourceLocation.withDefaultNamespace("nether");
     public ResourceLocation returnDimensionLocation = ResourceLocation.withDefaultNamespace("overworld");
     public boolean onlyIgnitableInReturnDimension = false;
     public int color;
     public int strictWidth, strictHeight;
-    public Integer portalSearchYBottom, portalSearchYTop;
-    public Integer returnPortalSearchYBottom, returnPortalSearchYTop;
+    public int portalSearchYBottom, portalSearchYTop = Integer.MIN_VALUE;
+    public int returnPortalSearchYBottom, returnPortalSearchYTop = Integer.MIN_VALUE;
     public PortalFrameTester portalFrameTester = new VanillaPortalFrameTester();
     private Consumer<Entity> postTeleportEvent = entity -> {};
     private Function<Entity, Boolean> preTeleportEvent = entity -> true;
 
-    public PortalLink() {}
+    public Block getFrameBlock() {
+        if (frameBlock == null) {
+            throw new IllegalStateException("Frame block is not set!");
+        }
+
+        return frameBlock;
+    }
+
+    public void setFrameBlock(Block frameBlock) {
+        this.frameBlock = frameBlock;
+    }
 
     public boolean doesIgnitionMatch(PortalIgnitionSource attemptedSource) {
         return ignitionSource.sourceType == attemptedSource.sourceType && ignitionSource.ignitionSourceID.equals(attemptedSource.ignitionSourceID);
