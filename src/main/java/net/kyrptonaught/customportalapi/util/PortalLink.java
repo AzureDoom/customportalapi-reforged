@@ -2,12 +2,22 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.network.PlayerSoundPayload;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalFrameTester;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.portal.TeleportTransition;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -29,6 +39,18 @@ public class PortalLink {
     public PortalFrameTester portalFrameTester = new VanillaPortalFrameTester();
     private Consumer<Entity> postTeleportEvent = entity -> {};
     private Function<Entity, Boolean> preTeleportEvent = entity -> true;
+    @Nullable
+    private ResourceLocation travelSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRAVEL);
+    private Function<Entity, Float> travelSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
+    private Function<Entity, Float> travelSoundPitch = (entity) -> 0.25f;
+    @Nullable
+    private ResourceLocation triggerSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRIGGER);
+    private Function<Entity, Float> triggerSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
+    private Function<Entity, Float> triggerSoundPitch = (entity) -> 0.25f;
+    @Nullable
+    public ResourceLocation ambientSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_AMBIENT);
+    public Function<Level, Float> ambientSoundVolume = (level) -> 0.5f;
+    public Function<Level, Float> ambientSoundPitch = (level) -> level.random.nextFloat() * 0.4F + 0.8F;
 
     public Block getFrameBlock() {
         if (frameBlock == null) {
@@ -73,6 +95,42 @@ public class PortalLink {
 
     public void executePostTeleportEvent(Entity entity) {
         postTeleportEvent.accept(entity);
+    }
+
+    public void setTravelSound(ResourceLocation travelSoundLocation, Function<Entity, Float> travelSoundVolume, Function<Entity, Float> travelSoundPitch) {
+        this.travelSoundLocation = travelSoundLocation;
+        this.travelSoundVolume = travelSoundVolume;
+        this.travelSoundPitch = travelSoundPitch;
+    }
+
+    public TeleportTransition.PostTeleportTransition getTravelSound() {
+        return (entity) -> {
+            if (entity instanceof ServerPlayer player && travelSoundLocation != null) {
+                PacketDistributor.sendToPlayer(player,
+                        new PlayerSoundPayload(travelSoundLocation, travelSoundVolume.apply(entity), travelSoundPitch.apply(entity)));
+            }
+        };
+    }
+
+    public void setTriggerSound(ResourceLocation triggerSoundLocation, Function<Entity, Float> triggerSoundVolume, Function<Entity, Float> triggerSoundPitch) {
+        this.triggerSoundLocation = triggerSoundLocation;
+        this.triggerSoundVolume = triggerSoundVolume;
+        this.triggerSoundPitch = triggerSoundPitch;
+    }
+
+    @Nullable
+    public SoundInstance getTriggerSound(Player player) {
+        if (triggerSoundLocation == null) {
+            return null;
+        }
+
+        return SimpleSoundInstance.forLocalAmbience(BuiltInRegistries.SOUND_EVENT.get(triggerSoundLocation).orElseThrow().value(), triggerSoundVolume.apply(player), triggerSoundPitch.apply(player));
+    }
+
+    public void setAmbientSound(ResourceLocation ambientSoundLocation, Function<Level, Float> ambientSoundVolume, Function<Level, Float> ambientSoundPitch) {
+        this.ambientSoundLocation = ambientSoundLocation;
+        this.ambientSoundVolume = ambientSoundVolume;
+        this.ambientSoundPitch = ambientSoundPitch;
     }
 
     public PortalFrameTester getFrameTester() {

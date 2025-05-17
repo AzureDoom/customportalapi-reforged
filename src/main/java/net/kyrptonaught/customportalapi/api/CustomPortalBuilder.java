@@ -10,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
@@ -169,6 +170,8 @@ public class CustomPortalBuilder {
 
     /**
      * Specify a custom portal frame tester to be used.
+     *
+     * @param frameTester The custom portal frame tester to be used
      */
     public CustomPortalBuilder customFrameTester(PortalFrameTester frameTester) {
         portalLink.portalFrameTester = frameTester;
@@ -178,18 +181,59 @@ public class CustomPortalBuilder {
     /**
      * Register an event to be called immediately before the specified entity is teleported.
      * Returning true will allow the teleportation to continue, while returning false will cancel it.
+     *
+     * @param event A function that accepts an entity and returns a boolean
      */
     public CustomPortalBuilder preTeleportEvent(Function<Entity, Boolean> event) {
         portalLink.setPreTeleportEvent(event);
         return this;
     }
 
-
     /**
      * Register an event to be called after the specified entity is teleported.
+     *
+     * @param event A consumer that accepts an entity
      */
     public CustomPortalBuilder postTeleportEvent(Consumer<Entity> event) {
         portalLink.setPostTeleportEvent(event);
+        return this;
+    }
+
+    /**
+     * Set the sound to be played when the player travels through the portal. Volume and pitch are accepted as functions
+     * to allow for dynamic values.
+     *
+     * @param travelSoundLocation ResourceLocation of the sound to be played
+     * @param travelSoundVolume Volume of the sound
+     * @param travelSoundPitch Pitch of the sound
+     */
+    public CustomPortalBuilder travelSound(ResourceLocation travelSoundLocation, Function<Entity, Float> travelSoundVolume, Function<Entity, Float> travelSoundPitch) {
+        portalLink.setTravelSound(travelSoundLocation, travelSoundVolume, travelSoundPitch);
+        return this;
+    }
+
+    /**
+     * Set the sound to be played when the player travels through the portal. Volume and pitch are accepted as functions
+     * to allow for dynamic values.
+     *
+     * @param triggerSoundLocation ResourceLocation of the sound to be played
+     * @param triggerSoundVolume Volume of the sound
+     * @param triggerSoundPitch Pitch of the sound
+     */
+    public CustomPortalBuilder triggerSound(ResourceLocation triggerSoundLocation, Function<Entity, Float> triggerSoundVolume, Function<Entity, Float> triggerSoundPitch) {
+        portalLink.setTriggerSound(triggerSoundLocation, triggerSoundVolume, triggerSoundPitch);
+        return this;
+    }
+
+    /**
+     * Set the sound to be played randomly while nearby the portal.
+     *
+     * @param ambientSoundLocation ResourceLocation of the sound to be played
+     * @param ambientSoundVolume Volume of the sound
+     * @param ambientSoundPitch Pitch of the sound
+     */
+    public CustomPortalBuilder ambientSound(ResourceLocation ambientSoundLocation, Function<Level, Float> ambientSoundVolume, Function<Level, Float> ambientSoundPitch) {
+        portalLink.setAmbientSound(ambientSoundLocation, ambientSoundVolume, ambientSoundPitch);
         return this;
     }
 }

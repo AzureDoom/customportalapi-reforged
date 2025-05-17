@@ -154,7 +154,7 @@ public class VanillaPortalFrameTester extends PortalFrameTester {
             x = portalRect.minCorner.getX() + 0.5D;
         }
 
-        TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entity1 -> {
+        TeleportTransition.PostTeleportTransition post = link.getTravelSound().then(entity1 -> {
             entity1.placePortalTicket(portalRect.minCorner);
             link.executePostTeleportEvent(entity1);
         });

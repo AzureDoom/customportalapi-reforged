@@ -8,8 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -33,25 +34,17 @@ import org.jetbrains.annotations.Nullable;
 public class CustomPortalBlock extends Block implements Portal {
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
-
     protected static final VoxelShape X_SHAPE = Block.box(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
-
     protected static final VoxelShape Z_SHAPE = Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
-
     protected static final VoxelShape Y_SHAPE = Block.box(0.0D, 6.0D, 0.0D, 16.0D, 10.0D, 16.0D);
 
     public CustomPortalBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState(stateDefinition.any().setValue(AXIS, Direction.Axis.X));
+        registerDefaultState(stateDefinition.any().setValue(AXIS, Direction.Axis.X));
     }
 
     @Override
-    public @NotNull VoxelShape getShape(
-        BlockState state,
-        @NotNull BlockGetter world,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext context
-    ) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(AXIS)) {
             case Z -> Z_SHAPE;
             case Y -> Y_SHAPE;
@@ -66,11 +59,11 @@ public class CustomPortalBlock extends Block implements Portal {
 
     @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-        Block block = getPortalBase((Level) level, pos);
-        PortalLink link = CustomPortalsMod.getPortalLinkFromBase(block);
+        Block portalBase = getPortalBase((Level) level, pos);
+        PortalLink link = CustomPortalsMod.getPortalLinkFromBase(portalBase);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester()
-                    .init((LevelAccessor) level, pos, CustomPortalHelper.getAxisFrom(state), block);
+                    .init((LevelAccessor) level, pos, CustomPortalHelper.getAxisFrom(state), portalBase);
             if (portalFrameTester.isAlreadyLitPortalFrame()) {
                 return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
             }
@@ -86,45 +79,43 @@ public class CustomPortalBlock extends Block implements Portal {
 
     @Override
     public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, RandomSource random) {
-        if (random.nextInt(100) == 0)
-            level.playLocalSound(
-                pos.getX() + 0.5D,
-                pos.getY() + 0.5D,
-                pos.getZ() + 0.5D,
-                SoundEvents.PORTAL_AMBIENT,
-                SoundSource.BLOCKS,
-                0.5F,
-                random.nextFloat() * 0.4F + 0.8F,
-                false
-            );
-
-        for (int i = 0; i < 4; ++i) {
-            double d = pos.getX() + random.nextDouble();
-            double e = pos.getY() + random.nextDouble();
-            double f = pos.getZ() + random.nextDouble();
-            double g = (random.nextFloat() - 0.5D) * 0.5D;
-            double h = (random.nextFloat() - 0.5D) * 0.5D;
-            double j = (random.nextFloat() - 0.5D) * 0.5D;
-            int k = random.nextInt(2) * 2 - 1;
-            if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
-                d = pos.getX() + 0.5D + 0.25D * k;
-                g = random.nextFloat() * 2.0F * k;
-            } else {
-                f = pos.getZ() + 0.5D + 0.25D * k;
-                j = random.nextFloat() * 2.0F * k;
+        Block portalBase = getPortalBase(level, pos);
+        if (random.nextInt(100) == 0) {
+            PortalLink link = CustomPortalsMod.getPortalLinkFromBase(portalBase);
+            if (link != null) {
+                SoundEvent event = BuiltInRegistries.SOUND_EVENT.getValue(link.ambientSoundLocation);
+                if (event != null) {
+                    level.playLocalSound(
+                            pos.getX() + 0.5D,
+                            pos.getY() + 0.5D,
+                            pos.getZ() + 0.5D,
+                            event,
+                            SoundSource.BLOCKS,
+                            link.ambientSoundVolume.apply(level),
+                            link.ambientSoundPitch.apply(level),
+                            false
+                    );
+                }
             }
-            level.addParticle(
-                new BlockParticleOption(
-                    ParticleTypes.BLOCK,
-                    getPortalBase(level, pos).defaultBlockState()
-                ),
-                d,
-                e,
-                f,
-                g,
-                h,
-                j
-            );
+        }
+
+        for (int i = 0; i < 4; i++) {
+            double dX = pos.getX() + random.nextDouble();
+            double dY = pos.getY() + random.nextDouble();
+            double dZ = pos.getZ() + random.nextDouble();
+            double sX = (random.nextFloat() - 0.5d) * 0.5d;
+            double sY = (random.nextFloat() - 0.5d) * 0.5d;
+            double sZ = (random.nextFloat() - 0.5d) * 0.5d;
+            int mod = random.nextInt(2) * 2 - 1;
+            if (!level.getBlockState(pos.west()).is(this) && !level.getBlockState(pos.east()).is(this)) {
+                dX = pos.getX() + 0.5f + 0.25f * mod;
+                sX = random.nextFloat() * 2.0f * mod;
+            } else {
+                dZ = pos.getZ() + 0.5f + 0.25f * mod;
+                sZ = random.nextFloat() * 2.0f * mod;
+            }
+
+            level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, portalBase.defaultBlockState()), dX, dY, dZ, sX, sY, sZ);
         }
     }
 

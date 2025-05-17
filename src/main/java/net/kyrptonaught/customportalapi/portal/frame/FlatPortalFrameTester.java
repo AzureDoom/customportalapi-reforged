@@ -181,7 +181,7 @@ public class FlatPortalFrameTester extends PortalFrameTester {
         double x = Mth.lerp(prevOffset.x, portalRect.minCorner.getX(), portalRect.minCorner.getX() + xSize);
         double z = Mth.lerp(prevOffset.z, portalRect.minCorner.getZ(), portalRect.minCorner.getZ() + zSize);
 
-        TeleportTransition.PostTeleportTransition post = TeleportTransition.PLAY_PORTAL_SOUND.then(entity1 -> entity1.placePortalTicket(portalRect.minCorner));
+        TeleportTransition.PostTeleportTransition post = link.getTravelSound().then(entity1 -> entity1.placePortalTicket(portalRect.minCorner));
 
         return new TeleportTransition(serverLevel,
                 new Vec3(x, portalRect.minCorner.getY() + 1D, z),

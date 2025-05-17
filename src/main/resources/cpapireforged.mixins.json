@@ -11,7 +11,8 @@
   "client": [
     "client.ChunkRendererRegionAccessor",
     "client.PortalManagerAccessor",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
