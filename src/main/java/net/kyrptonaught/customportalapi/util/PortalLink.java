@@ -8,6 +8,10 @@ import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalFrameTester;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +24,7 @@ import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -51,6 +56,8 @@ public class PortalLink {
     public ResourceLocation ambientSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_AMBIENT);
     public Function<Level, Float> ambientSoundVolume = (level) -> 0.5f;
     public Function<Level, Float> ambientSoundPitch = (level) -> level.random.nextFloat() * 0.4F + 0.8F;
+    public BiFunction<Level, BlockPos, ParticleOptions> portalParticle = (level, pos) -> new BlockParticleOption(ParticleTypes.BLOCK,
+            CustomPortalHelper.getPortalBaseDefault(level, pos).defaultBlockState());
 
     public Block getFrameBlock() {
         if (frameBlock == null) {

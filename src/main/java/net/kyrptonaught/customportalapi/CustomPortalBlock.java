@@ -6,8 +6,6 @@ import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -28,7 +26,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CustomPortalBlock extends Block implements Portal {
@@ -38,13 +35,13 @@ public class CustomPortalBlock extends Block implements Portal {
     protected static final VoxelShape Z_SHAPE = Block.box(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
     protected static final VoxelShape Y_SHAPE = Block.box(0.0D, 6.0D, 0.0D, 16.0D, 10.0D, 16.0D);
 
-    public CustomPortalBlock(Properties settings) {
-        super(settings);
+    public CustomPortalBlock(Properties properties) {
+        super(properties);
         registerDefaultState(stateDefinition.any().setValue(AXIS, Direction.Axis.X));
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(AXIS)) {
             case Z -> Z_SHAPE;
             case Y -> Y_SHAPE;
@@ -78,24 +75,27 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         Block portalBase = getPortalBase(level, pos);
+        PortalLink link = CustomPortalsMod.getPortalLinkFromBase(portalBase);
+
+        if (link == null) {
+            return;
+        }
+
         if (random.nextInt(100) == 0) {
-            PortalLink link = CustomPortalsMod.getPortalLinkFromBase(portalBase);
-            if (link != null) {
-                SoundEvent event = BuiltInRegistries.SOUND_EVENT.getValue(link.ambientSoundLocation);
-                if (event != null) {
-                    level.playLocalSound(
-                            pos.getX() + 0.5D,
-                            pos.getY() + 0.5D,
-                            pos.getZ() + 0.5D,
-                            event,
-                            SoundSource.BLOCKS,
-                            link.ambientSoundVolume.apply(level),
-                            link.ambientSoundPitch.apply(level),
-                            false
-                    );
-                }
+            SoundEvent event = BuiltInRegistries.SOUND_EVENT.getValue(link.ambientSoundLocation);
+            if (event != null) {
+                level.playLocalSound(
+                        pos.getX() + 0.5D,
+                        pos.getY() + 0.5D,
+                        pos.getZ() + 0.5D,
+                        event,
+                        SoundSource.BLOCKS,
+                        link.ambientSoundVolume.apply(level),
+                        link.ambientSoundPitch.apply(level),
+                        false
+                );
             }
         }
 
@@ -115,7 +115,7 @@ public class CustomPortalBlock extends Block implements Portal {
                 sZ = random.nextFloat() * 2.0f * mod;
             }
 
-            level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, portalBase.defaultBlockState()), dX, dY, dZ, sX, sY, sZ);
+            level.addParticle(link.portalParticle.apply(level, pos), dX, dY, dZ, sX, sY, sZ);
         }
     }
 
@@ -127,34 +127,27 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public int getPortalTransitionTime(@NotNull ServerLevel world, @NotNull Entity entity) {
+    public int getPortalTransitionTime(ServerLevel level, Entity entity) {
         if (entity instanceof Player playerEntity) {
-            return Math.max(
-                1,
-                world.getGameRules()
-                    .getInt(
-                        playerEntity.getAbilities().invulnerable
+            return Math.max(1, level.getGameRules().getInt(playerEntity.getAbilities().invulnerable
                             ? GameRules.RULE_PLAYERS_NETHER_PORTAL_CREATIVE_DELAY
-                            : GameRules.RULE_PLAYERS_NETHER_PORTAL_DEFAULT_DELAY
-                    )
-            );
-        } else {
-            return 0;
+                            : GameRules.RULE_PLAYERS_NETHER_PORTAL_DEFAULT_DELAY));
         }
+
+        return 0;
     }
 
-    public Block getPortalBase(Level world, BlockPos pos) {
-        return CustomPortalHelper.getPortalBaseDefault(world, pos);
+    public Block getPortalBase(Level level, BlockPos pos) {
+        return CustomPortalHelper.getPortalBaseDefault(level, pos);
     }
 
     @Override
     @Nullable
-    public TeleportTransition getPortalDestination(@NotNull ServerLevel world, @NotNull Entity entity, @NotNull BlockPos pos) {
-        return CustomTeleporter.createTeleportTarget(world, entity, getPortalBase(world, pos), pos);
+    public TeleportTransition getPortalDestination(ServerLevel level, Entity entity, BlockPos pos) {
+        return CustomTeleporter.createTeleportTarget(level, entity, getPortalBase(level, pos), pos);
     }
 
     @Override
-    @NotNull
     public Transition getLocalTransition() {
         return Transition.CONFUSION;
     }

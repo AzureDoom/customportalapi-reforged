@@ -6,6 +6,8 @@ import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.FlatPortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -234,6 +237,16 @@ public class CustomPortalBuilder {
      */
     public CustomPortalBuilder ambientSound(ResourceLocation ambientSoundLocation, Function<Level, Float> ambientSoundVolume, Function<Level, Float> ambientSoundPitch) {
         portalLink.setAmbientSound(ambientSoundLocation, ambientSoundVolume, ambientSoundPitch);
+        return this;
+    }
+
+    /**
+     * Set a custom portal particle effect.
+     *
+     * @param particleFunction A function that accepts a Level and BlockPos and returns a ParticleOptions
+     */
+    public CustomPortalBuilder portalParticle(BiFunction<Level, BlockPos, ParticleOptions> particleFunction) {
+        portalLink.portalParticle = particleFunction;
         return this;
     }
 }
