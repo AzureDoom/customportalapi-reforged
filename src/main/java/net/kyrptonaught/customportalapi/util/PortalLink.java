@@ -6,8 +6,6 @@ import net.kyrptonaught.customportalapi.network.PlayerSoundPayload;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalFrameTester;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -17,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -48,9 +45,9 @@ public class PortalLink {
     private Function<Entity, Float> travelSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
     private Function<Entity, Float> travelSoundPitch = (entity) -> 0.25f;
     @Nullable
-    private ResourceLocation triggerSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRIGGER);
-    private Function<Entity, Float> triggerSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
-    private Function<Entity, Float> triggerSoundPitch = (entity) -> 0.25f;
+    public ResourceLocation triggerSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRIGGER);
+    public Function<Entity, Float> triggerSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
+    public Function<Entity, Float> triggerSoundPitch = (entity) -> 0.25f;
     @Nullable
     public ResourceLocation ambientSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_AMBIENT);
     public Function<Level, Float> ambientSoundVolume = (level) -> 0.5f;
@@ -120,15 +117,6 @@ public class PortalLink {
         this.triggerSoundLocation = triggerSoundLocation;
         this.triggerSoundVolume = triggerSoundVolume;
         this.triggerSoundPitch = triggerSoundPitch;
-    }
-
-    @Nullable
-    public SoundInstance getTriggerSound(Player player) {
-        if (triggerSoundLocation == null) {
-            return null;
-        }
-
-        return SimpleSoundInstance.forLocalAmbience(BuiltInRegistries.SOUND_EVENT.get(triggerSoundLocation).orElseThrow().value(), triggerSoundVolume.apply(player), triggerSoundPitch.apply(player));
     }
 
     public void setAmbientSound(ResourceLocation ambientSoundLocation, Function<Level, Float> ambientSoundVolume, Function<Level, Float> ambientSoundPitch) {

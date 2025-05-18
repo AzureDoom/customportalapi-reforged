@@ -4,8 +4,10 @@ import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.PortalProcessor;
 import net.minecraft.world.level.block.Portal;
 import org.jetbrains.annotations.Nullable;
@@ -46,8 +48,10 @@ public class LocalPlayerMixin {
 
 		if (portalBlock instanceof CustomPortalBlock customportalblock && portalPos != null) {
 			PortalLink link = CustomPortalsMod.getPortalLinkFromBase(customportalblock.getPortalBase(player.clientLevel, portalPos));
-			if (link != null) {
-				return link.getTriggerSound(player);
+			if (link != null && link.triggerSoundLocation != null) {
+				return SimpleSoundInstance.forLocalAmbience(BuiltInRegistries.SOUND_EVENT.get(link.triggerSoundLocation).orElseThrow().value(),
+						link.triggerSoundVolume.apply(player),
+						link.triggerSoundPitch.apply(player));
 			}
 		}
 
