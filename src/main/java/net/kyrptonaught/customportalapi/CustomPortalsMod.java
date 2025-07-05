@@ -123,7 +123,7 @@ public class CustomPortalsMod {
                 if (hit.getType() == HitResult.Type.BLOCK) {
                     BlockHitResult blockHit = (BlockHitResult) hit;
                     if (
-                        !PortalPlacer.attemptPortalLight(
+                        PortalPlacer.attemptPortalLight(
                             world,
                             blockHit.getBlockPos().relative(blockHit.getDirection()),
                             PortalIgnitionSource.ItemUseSource(item).withPlayer(player)
