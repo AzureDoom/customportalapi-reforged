@@ -16,6 +16,8 @@ import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.event.CPASoundEventData;
+import net.kyrptonaught.customportalapi.event.PortalIgniteEvent;
+import net.kyrptonaught.customportalapi.event.PortalPreIgniteEvent;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -229,6 +231,23 @@ public class CustomPortalBuilder {
      */
     public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {
         portalLink.setPostTPEvent(event);
+        return this;
+    }
+
+    /**
+     * Register an event to be called before a portal is lit. PortalPreIgniteEvent returns true if the portal should be
+     * lit, or false if not
+     */
+    public CustomPortalBuilder registerPreIgniteEvent(PortalPreIgniteEvent event) {
+        portalLink.setPortalPreIgniteEvent(event);
+        return this;
+    }
+
+    /**
+     * Register an event to be called after a portal is lit.
+     */
+    public CustomPortalBuilder registerIgniteEvent(PortalIgniteEvent event) {
+        portalLink.setPortalIgniteEvent(event);
         return this;
     }
 }
