@@ -126,7 +126,7 @@ public class CustomPortalsMod {
                         !PortalPlacer.attemptPortalLight(
                             world,
                             blockHit.getBlockPos().relative(blockHit.getDirection()),
-                            PortalIgnitionSource.ItemUseSource(item)
+                            PortalIgnitionSource.ItemUseSource(item).withPlayer(player)
                         )
                     )
                         event.setCanceled(true);
