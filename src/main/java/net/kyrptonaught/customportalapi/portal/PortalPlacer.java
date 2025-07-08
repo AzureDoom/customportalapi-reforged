@@ -39,10 +39,17 @@ public class PortalPlacer {
             )
         )
             return false;
-        return createPortal(link, world, portalPos, foundationBlock);
+        return createPortal(link, world, portalPos, foundationBlock, framePos, ignitionSource);
     }
 
-    private static boolean createPortal(PortalLink link, Level world, BlockPos pos, Block foundationBlock) {
+    private static boolean createPortal(
+        PortalLink link,
+        Level world,
+        BlockPos pos,
+        Block foundationBlock,
+        BlockPos framePos,
+        PortalIgnitionSource ignitionSource
+    ) {
         Optional<PortalFrameTester> optional = link.getFrameTester()
             .createInstanceOfPortalFrameTester()
             .getNewPortal(
@@ -53,8 +60,13 @@ public class PortalPlacer {
             );
         // is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
-            if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight))
+            if (
+                optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight)
+                    && link.getPortalPreIgniteEvent().attemptLight(ignitionSource.player, world, pos, framePos, ignitionSource)
+            ) {
                 optional.get().lightPortal(foundationBlock);
+                link.getPortalIgniteEvent().afterLight(ignitionSource.player, world, pos, framePos, ignitionSource);
+            }
             return true;
         }
         return false;
