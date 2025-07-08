@@ -85,17 +85,17 @@ public class CustomPortalsMod {
     }
 
     public void createPortals(CustomPortalRegistrationEvent event) {
-//        CustomPortalBuilder builder =
-//            CustomPortalBuilder.beginPortal()
-//                .frameBlock(Blocks.GLOWSTONE)
-//                .destDimID(ResourceLocation.withDefaultNamespace("the_nether"))
-//                .lightWithWater()
-//                .tintColor(
-//                    255,
-//                    0,
-//                    255
-//                );
-//        event.register(builder);
+        // CustomPortalBuilder builder =
+        // CustomPortalBuilder.beginPortal()
+        // .frameBlock(Blocks.GLOWSTONE)
+        // .destDimID(ResourceLocation.withDefaultNamespace("the_nether"))
+        // .lightWithWater()
+        // .tintColor(
+        // 255,
+        // 0,
+        // 255
+        // );
+        // event.register(builder);
     }
 
     private void onServerStart(ServerStartedEvent event) {
