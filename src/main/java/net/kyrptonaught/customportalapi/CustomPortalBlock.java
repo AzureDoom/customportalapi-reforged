@@ -54,7 +54,7 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
         return ItemStack.EMPTY;
     }
 
@@ -133,7 +133,14 @@ public class CustomPortalBlock extends Block implements Portal {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    protected void entityInside(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Entity entity,
+        InsideBlockEffectApplier applier,
+        boolean intersects
+    ) {
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, pos);
         }

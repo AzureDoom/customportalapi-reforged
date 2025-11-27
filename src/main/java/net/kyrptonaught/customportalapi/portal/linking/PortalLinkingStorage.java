@@ -24,7 +24,8 @@ public class PortalLinkingStorage extends SavedData {
     public static final SavedDataType<PortalLinkingStorage> TYPE = new SavedDataType<>(
         "customportalapi_dimension_links",
         PortalLinkingStorage::new,
-        CODEC
+        CODEC,
+        null
     );
 
     private final List<DimensionLink> dimensionLinks = new ArrayList<>();

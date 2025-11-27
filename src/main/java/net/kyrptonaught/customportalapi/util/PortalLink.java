@@ -60,21 +60,21 @@ public class PortalLink {
     private BiConsumer<BlockPos, PortalIgnitionSource> postPortalIgniteEvent = (portalPos, source) -> {};
 
     @Nullable
-    private ResourceLocation travelSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRAVEL);
+    private ResourceLocation travelSoundLocation = BuiltInRegistries.SOUND_EVENT.getKey(SoundEvents.PORTAL_TRAVEL);
 
     private Function<Entity, Float> travelSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
 
     private Function<Entity, Float> travelSoundPitch = (entity) -> 0.25f;
 
     @Nullable
-    public ResourceLocation triggerSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_TRIGGER);
+    public ResourceLocation triggerSoundLocation = BuiltInRegistries.SOUND_EVENT.getKey(SoundEvents.PORTAL_TRIGGER);
 
     public Function<Entity, Float> triggerSoundVolume = (entity) -> entity.getRandom().nextFloat() * 0.4F + 0.8F;
 
     public Function<Entity, Float> triggerSoundPitch = (entity) -> 0.25f;
 
     @Nullable
-    public ResourceLocation ambientSoundLocation = BuiltInRegistries.SOUND_EVENT.getKeyOrNull(SoundEvents.PORTAL_AMBIENT);
+    public ResourceLocation ambientSoundLocation = BuiltInRegistries.SOUND_EVENT.getKey(SoundEvents.PORTAL_AMBIENT);
 
     public Function<Level, Float> ambientSoundVolume = (level) -> 0.5f;
 
